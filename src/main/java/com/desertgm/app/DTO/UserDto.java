@@ -1,8 +1,15 @@
 package com.desertgm.app.DTO;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+
 public record UserDto(
-        String hash,
+        @NotNull
+        String password,
+        @Email
+        @NotNull
         String email,
+        @NotNull
         String username
 ) {
 }

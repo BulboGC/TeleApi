@@ -18,8 +18,10 @@ public class UserService {
 
         userRepository.save(userModel);
     }
-
-    public UserModel getUserById(Long id){
+    public UserModel getUserByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+    public UserModel getUserById(String id){
       Optional< UserModel> user0 =  userRepository.findById(id);
 
       if(user0.isEmpty()){
@@ -28,6 +30,11 @@ public class UserService {
       return user0.get();
 
     }
+    public boolean userExist(String email){
+        UserModel user0 = userRepository.findByEmail(email);
+        return user0 != null;
+    }
+
 
 
 }
