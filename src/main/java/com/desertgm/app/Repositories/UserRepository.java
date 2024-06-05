@@ -1,13 +1,12 @@
 package com.desertgm.app.Repositories;
-import com.desertgm.app.Models.UserModel;
+import com.desertgm.app.Models.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface UserRepository extends MongoRepository<UserModel,String> {
-    UserModel findByEmail(String email);
+public interface UserRepository extends MongoRepository<User,String> {
+    User findByEmail(String email);
 
 }

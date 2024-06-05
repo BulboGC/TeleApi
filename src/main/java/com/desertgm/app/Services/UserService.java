@@ -1,6 +1,6 @@
 package com.desertgm.app.Services;
 
-import com.desertgm.app.Models.UserModel;
+import com.desertgm.app.Models.User;
 import com.desertgm.app.Repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +14,15 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public void addUser(UserModel userModel){
+    public void addUser(User user){
 
-        userRepository.save(userModel);
+        userRepository.save(user);
     }
-    public UserModel getUserByEmail(String email){
+    public User getUserByEmail(String email){
         return userRepository.findByEmail(email);
     }
-    public UserModel getUserById(String id){
-      Optional< UserModel> user0 =  userRepository.findById(id);
+    public User getUserById(String id){
+      Optional<User> user0 =  userRepository.findById(id);
 
       if(user0.isEmpty()){
           throw new Error("id enviado não existe");
@@ -31,7 +31,7 @@ public class UserService {
 
     }
     public boolean userExist(String email){
-        UserModel user0 = userRepository.findByEmail(email);
+        User user0 = userRepository.findByEmail(email);
         return user0 != null;
     }
 

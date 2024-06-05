@@ -1,7 +1,6 @@
 package com.desertgm.app.Services;
 
-import com.desertgm.app.Enums.EmailStatus;
-import com.desertgm.app.Models.EmailModel;
+import com.desertgm.app.Enums.Email.EmailStatus;
 import com.desertgm.app.Repositories.EmailRepository;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,21 +21,21 @@ public class EmailService {
 
 
     @Transactional
-    public EmailModel sendEmail(@NotNull EmailModel emailModel){
+    public com.desertgm.app.Models.Email.Email sendEmail(@NotNull com.desertgm.app.Models.Email.Email email){
 
-        emailModel.setSendDateEmail(LocalDateTime.now());
+        email.setSendDateEmail(LocalDateTime.now());
         try{
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(emailModel.getEmailFrom());
-            message.setTo(emailModel.getEmailTo());
-            message.setSubject(emailModel.getSubject());
-            message.setText(emailModel.getText());
+            message.setFrom(email.getEmailFrom());
+            message.setTo(email.getEmailTo());
+            message.setSubject(email.getSubject());
+            message.setText(email.getText());
             mailSender.send(message);
-            emailModel.setStatusEmail(EmailStatus.SENT);
+            email.setStatusEmail(EmailStatus.SENT);
         }catch (MailException e){
-            emailModel.setStatusEmail(EmailStatus.ERROR);
+            email.setStatusEmail(EmailStatus.ERROR);
         }finally {
-            return emailRepository.save(emailModel);
+            return email.save(email);
         }
 
     }

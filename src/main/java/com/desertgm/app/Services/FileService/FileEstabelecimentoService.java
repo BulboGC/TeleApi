@@ -1,6 +1,6 @@
 package com.desertgm.app.Services.FileService;
 
-import com.desertgm.app.Models.EstabelecimentoModel;
+import com.desertgm.app.Models.Leads.Estabelecimento;
 import com.desertgm.app.Services.Imports.EstabelecimentoService;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
@@ -33,7 +33,7 @@ public class FileEstabelecimentoService {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         int batchSize = 10000;
         int linecount = 0;
-        List<EstabelecimentoModel> batchList = new ArrayList<>(batchSize);
+        List<Estabelecimento> batchList = new ArrayList<>(batchSize);
 
         logger.info("Iniciando leitura do arquivo CSV: {}", csvFile);
 
@@ -53,7 +53,7 @@ public class FileEstabelecimentoService {
                     continue; // Pula linhas inválidas
                 }
 
-                EstabelecimentoModel model = estabelecimentoService.parseLine(nextLine, format);
+                Estabelecimento model = estabelecimentoService.parseLine(nextLine, format);
 
                 if (model != null) {
                     batchList.add(model);

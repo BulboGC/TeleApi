@@ -1,4 +1,4 @@
-package com.desertgm.app.Models;
+package com.desertgm.app.Models.Leads;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 @Data
 @Document("Estabelecimento")
-public class EstabelecimentoModel {
+public class Estabelecimento {
 
     //https://dadosabertos.rfb.gov.br/CNPJ/Estabelecimentos0.zip
     private Long id;

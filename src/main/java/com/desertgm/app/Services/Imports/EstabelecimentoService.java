@@ -1,6 +1,6 @@
 package com.desertgm.app.Services.Imports;
 
-import com.desertgm.app.Models.EstabelecimentoModel;
+import com.desertgm.app.Models.Leads.Estabelecimento;
 import com.desertgm.app.Repositories.EstabelecimentoRepository;
 import com.desertgm.app.Services.UtillsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +17,12 @@ public class EstabelecimentoService {
     @Autowired
     EstabelecimentoRepository estabelecimentoRepository;
 
-    public void saveAll(List<EstabelecimentoModel> list){
+    public void saveAll(List<Estabelecimento> list){
         estabelecimentoRepository.saveAll(list);
     }
 
 
-    public EstabelecimentoModel parseLine(String[] data, SimpleDateFormat format) {
+    public Estabelecimento parseLine(String[] data, SimpleDateFormat format) {
 
         if (data == null || data.length == 0) {
             return null; // Ignora linhas vazias ou nulas
@@ -40,75 +40,75 @@ public class EstabelecimentoService {
             // Handle exception
         }
 
-        EstabelecimentoModel estabelecimentoModel = new EstabelecimentoModel();
-        estabelecimentoModel.setCnpjFull(Long.parseLong(data[0] + data[1] + data[2] ));
-        estabelecimentoModel.setCnpjBaseId(Long.parseLong(data[0]));
-        estabelecimentoModel.setCnpjOrdem(utillsService.truncate(data[1], 255));
-        estabelecimentoModel.setCnpjDV(utillsService.truncate(data[2], 255));
+        Estabelecimento estabelecimento = new Estabelecimento();
+        estabelecimento.setCnpjFull(Long.parseLong(data[0] + data[1] + data[2] ));
+        estabelecimento.setCnpjBaseId(Long.parseLong(data[0]));
+        estabelecimento.setCnpjOrdem(utillsService.truncate(data[1], 255));
+        estabelecimento.setCnpjDV(utillsService.truncate(data[2], 255));
 
         if (utillsService.isValidLong(data[3])) {
-            estabelecimentoModel.setIdentificadorMatrizFilialId(Long.parseLong(data[3]));
+            estabelecimento.setIdentificadorMatrizFilialId(Long.parseLong(data[3]));
         }
         if (!data[4].isEmpty()) {
-            estabelecimentoModel.setNomeFantasia(utillsService.truncate(data[4], 255));
+            estabelecimento.setNomeFantasia(utillsService.truncate(data[4], 255));
         }
 
         if (utillsService.isValidLong(data[5])) {
-            estabelecimentoModel.setSitutacaoCadastralId(Long.parseLong(data[5]));
+            estabelecimento.setSitutacaoCadastralId(Long.parseLong(data[5]));
         }
 
         if (dataSituacaoCadastral != null && utillsService.isDateValid(dataSituacaoCadastral)) {
-            estabelecimentoModel.setDataSituacaoCadastral(dataSituacaoCadastral);
+            estabelecimento.setDataSituacaoCadastral(dataSituacaoCadastral);
         }
 
         if (utillsService.isValidLong(data[7])) {
-            estabelecimentoModel.setMotivoSituacaoCadastralId(Long.parseLong(data[7]));
+            estabelecimento.setMotivoSituacaoCadastralId(Long.parseLong(data[7]));
         }
 
-        estabelecimentoModel.setNomeCidadeExterior(utillsService.truncate(data[8], 255));
+        estabelecimento.setNomeCidadeExterior(utillsService.truncate(data[8], 255));
 
         if (utillsService.isValidLong(data[9])) {
-            estabelecimentoModel.setPaisId(Long.parseLong(data[9]));
+            estabelecimento.setPaisId(Long.parseLong(data[9]));
         }
 
         if (dataInicioAtividades != null && utillsService.isDateValid(dataInicioAtividades)) {
-            estabelecimentoModel.setDataInicioAtividade(dataInicioAtividades);
+            estabelecimento.setDataInicioAtividade(dataInicioAtividades);
         }
 
         if (utillsService.isValidLong(data[11])) {
-            estabelecimentoModel.setCnaeFiscalPrincipalId(Long.parseLong(data[11]));
+            estabelecimento.setCnaeFiscalPrincipalId(Long.parseLong(data[11]));
         }
 
         // Não truncar 'cnaeFiscalSecundaria'
-        estabelecimentoModel.setCnaeFiscalSecundaria(data[12]);
+        estabelecimento.setCnaeFiscalSecundaria(data[12]);
 
-        estabelecimentoModel.setTipoLogradouro(utillsService.truncate(data[13], 255));
-        estabelecimentoModel.setLogradouro(utillsService.truncate(data[14], 255));
-        estabelecimentoModel.setNumero(utillsService.truncate(data[15], 255));
+        estabelecimento.setTipoLogradouro(utillsService.truncate(data[13], 255));
+        estabelecimento.setLogradouro(utillsService.truncate(data[14], 255));
+        estabelecimento.setNumero(utillsService.truncate(data[15], 255));
         // Não truncar 'complemento'
-        estabelecimentoModel.setComplemento(data[16]);
-        estabelecimentoModel.setBairro(utillsService.truncate(data[17], 255));
-        estabelecimentoModel.setCep(utillsService.truncate(data[18], 255));
-        estabelecimentoModel.setUf(utillsService.truncate(data[19], 255));
+        estabelecimento.setComplemento(data[16]);
+        estabelecimento.setBairro(utillsService.truncate(data[17], 255));
+        estabelecimento.setCep(utillsService.truncate(data[18], 255));
+        estabelecimento.setUf(utillsService.truncate(data[19], 255));
 
         if (utillsService.isValidLong(data[20])) {
-            estabelecimentoModel.setMunicipioId(Long.parseLong(data[20]));
+            estabelecimento.setMunicipioId(Long.parseLong(data[20]));
         }
 
-        estabelecimentoModel.setDdd1(utillsService.truncate(data[21], 255));
-        estabelecimentoModel.setTelefone1(utillsService.truncate(data[22], 255));
-        estabelecimentoModel.setDdd2(utillsService.truncate(data[23], 255));
-        estabelecimentoModel.setTelefone2(utillsService.truncate(data[24], 255));
-        estabelecimentoModel.setDddfax(utillsService.truncate(data[25], 255));
-        estabelecimentoModel.setFax(utillsService.truncate(data[26], 255));
-        estabelecimentoModel.setEmail(utillsService.truncate(data[27], 255));
-        estabelecimentoModel.setSituacaoespecial(utillsService.truncate(data[28], 255));
+        estabelecimento.setDdd1(utillsService.truncate(data[21], 255));
+        estabelecimento.setTelefone1(utillsService.truncate(data[22], 255));
+        estabelecimento.setDdd2(utillsService.truncate(data[23], 255));
+        estabelecimento.setTelefone2(utillsService.truncate(data[24], 255));
+        estabelecimento.setDddfax(utillsService.truncate(data[25], 255));
+        estabelecimento.setFax(utillsService.truncate(data[26], 255));
+        estabelecimento.setEmail(utillsService.truncate(data[27], 255));
+        estabelecimento.setSituacaoespecial(utillsService.truncate(data[28], 255));
 
         if (dateSituacaoEspecial != null && utillsService.isDateValid(dateSituacaoEspecial)) {
-            estabelecimentoModel.setDatasituacaoespecial(dateSituacaoEspecial);
+            estabelecimento.setDatasituacaoespecial(dateSituacaoEspecial);
         }
 
-        return estabelecimentoModel;
+        return estabelecimento;
 
     }
 

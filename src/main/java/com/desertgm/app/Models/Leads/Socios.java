@@ -1,14 +1,12 @@
-package com.desertgm.app.Models;
+package com.desertgm.app.Models.Leads;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 @Document("Socio")
-public class SocioModel {
-    @Id
-    private String id;
+public class Socios {
+
 
     private Long cnpjBase;
 
@@ -45,7 +43,5 @@ public class SocioModel {
 - 7 para os intervalos entre 61 a 70 anos;
 - 8 para os intervalos entre 71 a 80 anos; - 9 para maiores de 80 anos.
 - 0 para não se aplica.*/
-
-
 
 }

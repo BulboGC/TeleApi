@@ -1,7 +1,7 @@
-package com.desertgm.app.Controller;
+package com.desertgm.app.Controller.Email;
 
 import com.desertgm.app.DTO.EmailDto;
-import com.desertgm.app.Models.EmailModel;
+import com.desertgm.app.Models.Email.Email;
 import com.desertgm.app.Services.EmailService;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
@@ -18,11 +18,11 @@ public class EmailController {
     EmailService emailService;
 
     @PostMapping("/sending-email")
-    public ResponseEntity<EmailModel> sendingEmail(@RequestBody @Valid EmailDto emailDto){
-        EmailModel emailModel = new EmailModel();
-        BeanUtils.copyProperties(emailDto,emailModel);
-        emailService.sendEmail(emailModel);
-        return new ResponseEntity<>(emailModel, HttpStatus.CREATED);
+    public ResponseEntity<Email> sendingEmail(@RequestBody @Valid EmailDto emailDto){
+        Email email = new Email();
+        BeanUtils.copyProperties(emailDto, email);
+        emailService.sendEmail(email);
+        return new ResponseEntity<>(email, HttpStatus.CREATED);
 
     }
 }

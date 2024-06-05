@@ -1,12 +1,11 @@
-package com.desertgm.app.Models;
+package com.desertgm.app.Models.Leads;
 
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 @Data
 @Document("Company")
-public class CompanyModel {
+public class Company {
     //https://dadosabertos.rfb.gov.br/CNPJ/Empresas0.zip
     @MongoId
     private Long id;

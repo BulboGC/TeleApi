@@ -7,14 +7,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -24,7 +21,7 @@ import java.util.List;
 @CompoundIndexes({
         @CompoundIndex(name = "email_username_idx", def = "{'email': 1, 'username': 1}")
 })
-public class UserModel implements UserDetails{
+public class User implements UserDetails{
 
     @Id
     @Indexed
@@ -45,7 +42,7 @@ public class UserModel implements UserDetails{
 
     private LocalDateTime createdAt;
 
-    public UserModel() {
+    public User() {
         createdAt = LocalDateTime.now();
     }
     public String getRoleAsString() {
@@ -57,7 +54,7 @@ public class UserModel implements UserDetails{
         else return null;
     }
 
-    public UserModel(String password, String email, String username, int role) {
+    public User(String password, String email, String username, int role) {
         this.password = password;
         this.email = email;
         this.username = username;
