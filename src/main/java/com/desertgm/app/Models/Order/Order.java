@@ -1,6 +1,7 @@
 package com.desertgm.app.Models.Order;
 
 import com.desertgm.app.Enums.Order.OrderStatus;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,11 +12,11 @@ import java.util.List;
 public class Order {
     @Id
     private String id;
-    private String userId;
+    private ObjectId userId;
     private OrderStatus status;
     private List<Item> orderItem;
 
-    public Order(String userId, OrderStatus status,List<Item> orderItem) {
+    public Order(ObjectId userId, OrderStatus status,List<Item> orderItem) {
         this.userId = userId;
         this.status = status;
         this.orderItem = orderItem != null ? orderItem : new ArrayList<>();
@@ -25,7 +26,7 @@ public class Order {
         this.orderItem.add(item);
     }
 
-    public String getUserId() {
+    public ObjectId getUserId() {
         return userId;
     }
 

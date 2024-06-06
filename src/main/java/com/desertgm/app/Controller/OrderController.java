@@ -2,9 +2,13 @@ package com.desertgm.app.Controller;
 
 import com.desertgm.app.DTO.Order.OrderDto;
 import com.desertgm.app.Enums.Order.OrderStatus;
+import com.desertgm.app.Enums.UserRole;
+import com.desertgm.app.Models.Order.Item;
 import com.desertgm.app.Models.Order.Order;
 import com.desertgm.app.Services.Order.OrderService;
+import com.desertgm.app.Services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +26,8 @@ import java.util.stream.Collectors;
 public class OrderController {
     @Autowired
     OrderService orderService;
+    @Autowired
+    UserService userService;
 
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrder(@PathVariable("id") String id
@@ -34,7 +41,8 @@ public class OrderController {
 
     @PostMapping("/")
     public ResponseEntity<String> addOrder(@RequestBody OrderDto orderDto, @RequestAttribute("userId") String userId){
-        Order order = new Order(userId,OrderStatus.valueOf(orderDto.status()),orderDto.orderItem());
+        var objectId = new ObjectId(userId);
+        Order order = new Order(objectId,OrderStatus.valueOf(orderDto.status()), orderDto.orderItems());
         orderService.addOrder(order);
         return ResponseEntity.ok().body("Pedido Salvo com sucesso");
     }
@@ -42,16 +50,9 @@ public class OrderController {
     @GetMapping("/")
     public ResponseEntity<List<Order>> getOrderList(@RequestAttribute("userId") String userId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        var user = userService.getUserById(userId);
 
-        var isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-
-        if(isAdmin){
-            orderService.getAllOrders();
-        }else {
-
-        }
-        var orders = orderService.getListOrder(userId);
+        var orders = orderService.getListOrder(userId, UserRole.fromValue(user.getRole()));
         return ResponseEntity.ok().body(orders);
     }
 

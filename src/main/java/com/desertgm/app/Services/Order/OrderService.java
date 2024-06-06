@@ -1,8 +1,11 @@
 package com.desertgm.app.Services.Order;
 
+import com.desertgm.app.Enums.UserRole;
 import com.desertgm.app.Models.Order.Item;
 import com.desertgm.app.Models.Order.Order;
+import com.desertgm.app.Models.User;
 import com.desertgm.app.Repositories.OrderRepository;
+import com.desertgm.app.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,8 @@ import java.util.Optional;
 public class OrderService {
     @Autowired
     OrderRepository orderRepository;
+    @Autowired
+    UserRepository userRepository;
 
     public void addOrder(Order order){
         orderRepository.save(order);
@@ -23,14 +28,21 @@ public class OrderService {
       return order.get();
     }
 
-    public List<Order> getListOrder(String userId) throws RuntimeException {
-        try{
-            return orderRepository.findByUserId(userId);
-        }catch (Exception e){
+    public List<Order> getListOrder(String userId, UserRole userRole) throws RuntimeException {
 
-            throw new RuntimeException("Erro ao buscar no banco de dados");
+        switch (userRole){
+            case USER ->{ return orderRepository.findByUserId(userId);}
+            case ADMIN ->{ orderRepository.findAll();}
+            case SUPERVISOR -> {
+                List< User > users =  userRepository.findBySupervisorId(userId);
+                List<String> subordinateUserIds = users.stream()
+                    .map(User::getId)
+                    .toList();
+                return orderRepository.findByUserIdIn(subordinateUserIds);
+            }
+
         }
-
+            return orderRepository.findByUserId(userId);
     }
 
     public void deleteOrder(String id){

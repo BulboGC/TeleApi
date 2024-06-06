@@ -22,7 +22,7 @@ public class Lead {
     private String activity;
 
     /*PENDING,CONFIRMED,SUSPENDED,REFUSED */
-    private String status;
+    private int status;
 
     private LocalDateTime dateForCall;
 

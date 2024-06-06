@@ -35,7 +35,7 @@ public class EmailService {
         }catch (MailException e){
             email.setStatusEmail(EmailStatus.ERROR);
         }finally {
-            return email.save(email);
+            return emailRepository.save(email);
         }
 
     }

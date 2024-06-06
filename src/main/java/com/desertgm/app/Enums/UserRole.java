@@ -5,9 +5,19 @@ import lombok.Getter;
 @Getter
 public enum UserRole {
     ADMIN(1),
-    USER(2);
+    USER(2),
+    SUPERVISOR(3);
+
     private int roleValue;
     UserRole(int roleValue){
         this.roleValue = roleValue;
+    }
+    public static UserRole fromValue(int value){
+        for (UserRole role : UserRole.values()) {
+            if (role.getRoleValue() == value) {
+                return role;
+            }
+        }
+        throw new RuntimeException("Role invalida");
     }
 }

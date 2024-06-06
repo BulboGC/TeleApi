@@ -9,7 +9,7 @@ public class Item {
     private String brand;
     private String model;
     private String color;
-    private Year year;
+    private String year;
     private String version;
     //data limite
     private LocalDateTime dueDate;
