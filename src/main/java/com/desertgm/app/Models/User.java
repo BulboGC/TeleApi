@@ -35,10 +35,12 @@ public class User implements UserDetails{
     @Indexed
     private String username;
 
-    private Long supervisorId;
+    private String supervisorId;
 
     @Indexed
     private int role;
+
+    private String name;
 
     private LocalDateTime createdAt;
 

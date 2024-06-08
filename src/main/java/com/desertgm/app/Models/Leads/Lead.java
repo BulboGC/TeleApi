@@ -1,9 +1,10 @@
 package com.desertgm.app.Models.Leads;
 
+import lombok.Data;
 import org.hibernate.validator.constraints.br.CNPJ;
 
 import java.time.LocalDateTime;
-
+@Data
 public class Lead {
     private String Porte;
     private Long identificadorMatrizFilial;
@@ -17,7 +18,7 @@ public class Lead {
 
     private String Phone2;
 
-    private String CNAE;
+    private Long CNAE;
 
     private String activity;
 

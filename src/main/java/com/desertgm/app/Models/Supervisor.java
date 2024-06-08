@@ -3,6 +3,9 @@ package com.desertgm.app.Models;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
+
 @Data
 @Document(collection = "Supervisor")
 public class Supervisor {
@@ -18,5 +21,5 @@ public class Supervisor {
 
     private String status;
 
-    private String userId;
+    private List<String> userId;
 }

@@ -10,6 +10,11 @@ public record UserDto(
         @NotNull
         String email,
         @NotNull
-        String username
+        String username,
+
+        String supervisorId,
+
+        String name
+
 ) {
 }

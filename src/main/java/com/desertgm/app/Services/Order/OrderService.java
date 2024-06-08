@@ -25,7 +25,10 @@ public class OrderService {
 
     public Order getOrder(String id){
       Optional<Order> order =  orderRepository.findById(id);
-      return order.get();
+      if(order.isPresent()){
+          return order.get();
+      }
+        throw new RuntimeException("usuario não encontrado");
     }
 
     public List<Order> getListOrder(String userId, UserRole userRole) throws RuntimeException {

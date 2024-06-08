@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Service
 public class LeadService {
     @Autowired
-    LeadRepository leadRepository;
+    private LeadRepository leadRepository;
     @Autowired
     private UserRepository userRepository;
 

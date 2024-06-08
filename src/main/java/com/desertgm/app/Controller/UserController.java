@@ -1,12 +1,16 @@
 package com.desertgm.app.Controller;
 
+import com.desertgm.app.Models.User;
 import com.desertgm.app.Repositories.UserRepository;
 import com.desertgm.app.Services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -36,5 +40,9 @@ public class UserController {
 
     }
 
+    public ResponseEntity<List<User>> getAllSupervisors(){
+       List<User> userList =  userService.findAllSupervisors();
+       return  userList;
+    }
 
 }
