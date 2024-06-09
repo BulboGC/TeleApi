@@ -3,23 +3,17 @@ package com.desertgm.app.Controller;
 import com.desertgm.app.DTO.Order.OrderDto;
 import com.desertgm.app.Enums.Order.OrderStatus;
 import com.desertgm.app.Enums.UserRole;
-import com.desertgm.app.Models.Order.Item;
 import com.desertgm.app.Models.Order.Order;
 import com.desertgm.app.Services.Order.OrderService;
-import com.desertgm.app.Services.UserService;
-import jakarta.servlet.http.HttpServletRequest;
+import com.desertgm.app.Services.User.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/order")

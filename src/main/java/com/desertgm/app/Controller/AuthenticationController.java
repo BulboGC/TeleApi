@@ -3,11 +3,16 @@ package com.desertgm.app.Controller;
 
 import com.desertgm.app.DTO.AuthenticationDto;
 import com.desertgm.app.DTO.ResponseDto;
-import com.desertgm.app.DTO.UserDto;
-import com.desertgm.app.Enums.UserRole;
-import com.desertgm.app.Models.User;
+import com.desertgm.app.DTO.User.ForgotPassDto;
+import com.desertgm.app.DTO.User.UpdatePasswordDto;
+import com.desertgm.app.DTO.User.UserDto;
+import com.desertgm.app.Models.Email.Email;
+import com.desertgm.app.Models.User.User;
+import com.desertgm.app.Repositories.UserRepository;
+import com.desertgm.app.Services.EmailService;
 import com.desertgm.app.Services.TokenService;
-import com.desertgm.app.Services.UserService;
+import com.desertgm.app.Services.User.RecoveryTokenService;
+import com.desertgm.app.Services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +21,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("auth")
@@ -27,7 +31,13 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    TokenService tokenService;
+    private TokenService tokenService;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private RecoveryTokenService recoveryTokenService;
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/login")
     public ResponseEntity<HashMap<String,String>> login(@RequestBody AuthenticationDto data){
@@ -42,51 +52,22 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(mapReturn);
     }
 
-    // criar parametro para trocar entre admin e usuario comum
-    @PostMapping("/register")
+    @PostMapping("/register")//usuario comum 1 ADM 2 Supervisor 3
     public ResponseEntity<HashMap<String,String>> register(@RequestBody UserDto userDto){
 
-        if(userService.userExist(userDto.email())) return ResponseEntity.badRequest().build();
+        if(userService.userExist(userDto.email().toLowerCase())) return ResponseEntity.badRequest().build();
         else {
             String encryptedPassword = new BCryptPasswordEncoder().encode(userDto.password());
 
-            User user = new User(encryptedPassword,userDto.email(),userDto.username(), UserRole.USER.getRoleValue());
-            userService.addUserorUpdate(user);
-            userService.addUserorUpdate(user);
+            User user = new User();
+            user.setName(userDto.name());
+            user.setPassword(encryptedPassword);
+            user.setEmail(userDto.email().toLowerCase());
+            user.setUsername(userDto.username());
+            user.setRole(userDto.role());
 
-            ResponseDto responseDto = new ResponseDto();
-            responseDto.addResponse("msg","Usuario salvo com sucesso");
-            responseDto.addResponse("status","OK");
-            return  ResponseEntity.ok().body(responseDto.getResponse());
-        }
-    }
-    @PostMapping("/register-Super")
-    public ResponseEntity<HashMap<String,String>> registerS(@RequestBody UserDto userDto){
-
-        if(userService.userExist(userDto.email())) return ResponseEntity.badRequest().build();
-        else {
-            String encryptedPassword = new BCryptPasswordEncoder().encode(userDto.password());
-
-            User user = new User(encryptedPassword,userDto.email(),userDto.username(), UserRole.SUPERVISOR.getRoleValue());
-            userService.addUserorUpdate(user);
             userService.addUserorUpdate(user);
 
-            ResponseDto responseDto = new ResponseDto();
-            responseDto.addResponse("msg","Usuario salvo com sucesso");
-            responseDto.addResponse("status","OK");
-            return  ResponseEntity.ok().body(responseDto.getResponse());
-        }
-    }
-
-    @PostMapping("/register-ADM")
-    public ResponseEntity<HashMap<String,String>> registerAdm(@RequestBody UserDto userDto){
-        if(userService.userExist(userDto.email())) return ResponseEntity.badRequest().build();
-        else {
-            String encryptedPassword = new BCryptPasswordEncoder().encode(userDto.password());
-
-            User user = new User(encryptedPassword,userDto.email(),userDto.username(), UserRole.ADMIN.getRoleValue());
-            userService.addUserorUpdate(user);
-            userService.addUserorUpdate(user);
 
             ResponseDto responseDto = new ResponseDto();
             responseDto.addResponse("msg","Usuario salvo com sucesso");
@@ -111,6 +92,38 @@ public class AuthenticationController {
         }
         return ResponseEntity.badRequest().build();
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<HashMap<String,String>> forgotPass(@RequestBody ForgotPassDto forgotPassDto){
+        User user = userService.getUserByEmail(forgotPassDto.email());
+        ResponseDto response = new ResponseDto();
+
+        if(user == null) {
+            response.addResponse("msg","o email informado não é cadastrado no sistema");
+            return ResponseEntity.badRequest().body(response.getResponse());
+        }
+        else {
+            Email email = emailService.sendRecoveryPass(forgotPassDto.email().toLowerCase());
+            emailService.sendEmail(email);
+            response.addResponse("msg","email enviado.");
+            return ResponseEntity.ok().body(response.getResponse());
+
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity resetPassword(@RequestBody UpdatePasswordDto updatePasswordDto){
+
+        User user =  recoveryTokenService.getUserWithToken(updatePasswordDto.token());
+        if(user == null){
+            return ResponseEntity.badRequest().build();
+        }
+        String encryptedPassword = new BCryptPasswordEncoder().encode(updatePasswordDto.password());
+        user.setPassword(encryptedPassword);
+        userService.addUserorUpdate(user);
+        return ResponseEntity.ok().build();
+    }
+
 
 
 

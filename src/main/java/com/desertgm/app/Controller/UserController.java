@@ -1,8 +1,8 @@
 package com.desertgm.app.Controller;
 
-import com.desertgm.app.Models.User;
+import com.desertgm.app.Models.User.User;
 import com.desertgm.app.Repositories.UserRepository;
-import com.desertgm.app.Services.UserService;
+import com.desertgm.app.Services.User.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = "*")
 public class UserController {
     @Autowired
     UserService userService;
@@ -39,10 +40,10 @@ public class UserController {
         }
 
     }
-
+    @GetMapping("/Supervisors")
     public ResponseEntity<List<User>> getAllSupervisors(){
        List<User> userList =  userService.findAllSupervisors();
-       return  userList;
+       return  ResponseEntity.ok().body(userList);
     }
 
 }

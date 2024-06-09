@@ -1,9 +1,8 @@
 package com.desertgm.app.Services.Order;
 
 import com.desertgm.app.Enums.UserRole;
-import com.desertgm.app.Models.Order.Item;
 import com.desertgm.app.Models.Order.Order;
-import com.desertgm.app.Models.User;
+import com.desertgm.app.Models.User.User;
 import com.desertgm.app.Repositories.OrderRepository;
 import com.desertgm.app.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

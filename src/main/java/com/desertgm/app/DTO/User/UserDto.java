@@ -1,4 +1,4 @@
-package com.desertgm.app.DTO;
+package com.desertgm.app.DTO.User;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -14,7 +14,8 @@ public record UserDto(
 
         String supervisorId,
 
-        String name
+        String name,
+        int role
 
 ) {
 }

@@ -1,4 +1,4 @@
-package com.desertgm.app.Models;
+package com.desertgm.app.Models.User;
 
 
 import com.desertgm.app.Enums.UserRole;

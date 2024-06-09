@@ -1,7 +1,7 @@
-package com.desertgm.app.Services;
+package com.desertgm.app.Services.User;
 
 import com.desertgm.app.Enums.UserRole;
-import com.desertgm.app.Models.User;
+import com.desertgm.app.Models.User.User;
 import com.desertgm.app.Repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class UserService {
         userRepository.save(user);
     }
     public User getUserByEmail(String email){
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email.toLowerCase());
     }
 
     public User getUserById(String id){
@@ -43,6 +43,7 @@ public class UserService {
         return userRepository.findByRole(UserRole.SUPERVISOR.getRoleValue());
 
     }
+
 
 
 }

@@ -1,8 +1,7 @@
 package com.desertgm.app.Repositories;
-import com.desertgm.app.Models.User;
+import com.desertgm.app.Models.User.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
