@@ -12,9 +12,9 @@ import java.util.Optional;
 @Service
 public class RecoveryTokenService {
     @Autowired
-    RecoveryTokenRepository recoveryTokenRepository;
+    private RecoveryTokenRepository recoveryTokenRepository;
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     public RecoveryToken addRecoveryToken(RecoveryToken recoveryToken){
          return recoveryTokenRepository.save(recoveryToken);

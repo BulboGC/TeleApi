@@ -9,18 +9,12 @@ public enum OrderStatus {
 
 
     public static OrderStatus fromString(String status) {
-        switch (status.toUpperCase()) {
-            case "PENDING":
-                return PENDING;
-            case "CANCELLED":
-                return CANCELLED;
-            case "PAID":
-                return PAID;
-            case "SUSPENDED":
-                return SUSPENDED;
-
-            default:
-                throw new IllegalArgumentException("Unknown sale status: " + status);
-        }
+        return switch (status.toUpperCase()) {
+            case "PENDING" -> PENDING;
+            case "CANCELLED" -> CANCELLED;
+            case "PAID" -> PAID;
+            case "SUSPENDED" -> SUSPENDED;
+            default -> throw new IllegalArgumentException("Unknown sale status: " + status);
+        };
     }
 }

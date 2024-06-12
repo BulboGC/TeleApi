@@ -1,11 +1,15 @@
 package com.desertgm.app.Models.Order;
 
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 import java.time.Year;
 @Data
 public class Item {
+
+    @Id
+    private String id;
     private String brand;
     private String model;
     private String color;

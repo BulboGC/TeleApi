@@ -4,9 +4,10 @@ import lombok.Getter;
 
 @Getter
 public enum UserRole {
-    ADMIN(1),
-    USER(2),
-    SUPERVISOR(3);
+    USER(1),
+    ADMIN(2),
+    SUPERVISOR(3),
+    SELLER(4);
 
     private int roleValue;
     UserRole(int roleValue){

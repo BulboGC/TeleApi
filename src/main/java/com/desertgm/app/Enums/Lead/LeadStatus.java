@@ -6,11 +6,13 @@ import lombok.Getter;
 
 @Getter
 public enum LeadStatus {
-    /*PENDING,CONFIRMED,SUSPENDED,REFUSED */
-    PENDING(1),
-    CONFIRMED(2),
-    SUSPENDED(3),
-    REFUSED(4);
+
+    PENDING(1),//padrao
+    CONFIRMED(2),//criação de pedido
+    SUSPENDED(3),//data para ligar
+    REFUSED(4);//recusou o produto
+
+
     private int leadStatus;
     LeadStatus(int leadstatus){
         this.leadStatus = leadstatus;

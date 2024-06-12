@@ -6,6 +6,7 @@ import org.bson.types.ObjectId;
 import java.util.List;
 
 public record OrderDto(
+        String leadId,
         ObjectId userId,
         String status,
         List<Item>orderItems

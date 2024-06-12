@@ -2,6 +2,7 @@ package com.desertgm.app.Models.User;
 
 
 import com.desertgm.app.Enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
@@ -27,6 +28,7 @@ public class User implements UserDetails{
     @Indexed
     private String id;
 
+    @JsonIgnore
     private String password;
 
     @Indexed(unique = true)
@@ -42,6 +44,8 @@ public class User implements UserDetails{
 
     private String name;
 
+    private String lastname;
+
     private LocalDateTime createdAt;
 
     public User() {
@@ -56,45 +60,48 @@ public class User implements UserDetails{
         else return null;
     }
 
-    public User(String password, String email, String username, int role) {
+    public User(String password, String email, String username, int role,String name,String lastname) {
         this.password = password;
         this.email = email;
         this.username = username;
         this.role = role;
         this.createdAt = LocalDateTime.now();
-    }
+        this.name = name;
+        this.lastname = lastname;
 
+    }
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (this.role == UserRole.ADMIN.getRoleValue()) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),new SimpleGrantedAuthority("ROLE_USER"));
         else return  List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
-
+    @JsonIgnore
     @Override
     public String getPassword() {
         return password;
     }
-
+    @JsonIgnore
     @Override
     public String getUsername(){
         return username;
     }
-
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return UserDetails.super.isAccountNonExpired();
     }
-
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return UserDetails.super.isAccountNonLocked();
     }
-
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return UserDetails.super.isCredentialsNonExpired();
     }
-
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();

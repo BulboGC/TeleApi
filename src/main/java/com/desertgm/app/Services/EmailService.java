@@ -7,6 +7,7 @@ import com.desertgm.app.Models.User.User;
 import com.desertgm.app.Repositories.EmailRepository;
 import com.desertgm.app.Repositories.UserRepository;
 import com.desertgm.app.Services.User.RecoveryTokenService;
+import com.desertgm.app.Services.User.UserService;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -31,7 +32,7 @@ public class EmailService {
     private RecoveryTokenService recoveryTokenService;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Transactional
     @Async
@@ -57,7 +58,7 @@ public class EmailService {
         // Criar e salvar o token no banco de dados
         RecoveryToken recoveryToken = new RecoveryToken();
         recoveryToken.setCreateAt(LocalDateTime.now());
-        User user = userRepository.findByEmail(emailTo);
+        User user = userService.getUserByEmail(emailTo);
         recoveryToken.setUserId(user.getId());
         recoveryToken = recoveryTokenService.addRecoveryToken(recoveryToken);
 

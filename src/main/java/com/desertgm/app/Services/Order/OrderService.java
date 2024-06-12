@@ -1,12 +1,17 @@
 package com.desertgm.app.Services.Order;
 
+import com.desertgm.app.Enums.Lead.LeadStatus;
 import com.desertgm.app.Enums.UserRole;
+import com.desertgm.app.Models.Leads.Lead;
 import com.desertgm.app.Models.Order.Order;
 import com.desertgm.app.Models.User.User;
+import com.desertgm.app.Repositories.LeadRepository;
 import com.desertgm.app.Repositories.OrderRepository;
 import com.desertgm.app.Repositories.UserRepository;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,8 +22,15 @@ public class OrderService {
     OrderRepository orderRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    LeadRepository leadRepository;
 
-    public void addOrder(Order order){
+    @Transactional
+    public void addOrder(Order order,String leadId){
+        var lead = leadRepository.findById(leadId);
+        Lead newlead = lead.get();
+        newlead.setStatus(LeadStatus.CONFIRMED.getLeadStatus());
+        leadRepository.save(newlead);
         orderRepository.save(order);
     }
 
@@ -29,6 +41,13 @@ public class OrderService {
       }
         throw new RuntimeException("usuario não encontrado");
     }
+    public List<Order> getOrdersByLeadId(String id){
+        return orderRepository.findByLeadId(id);
+    }
+
+
+
+
 
     public List<Order> getListOrder(String userId, UserRole userRole) throws RuntimeException {
 

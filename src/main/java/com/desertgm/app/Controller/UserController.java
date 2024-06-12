@@ -1,5 +1,7 @@
 package com.desertgm.app.Controller;
 
+import com.desertgm.app.DTO.NewResponseDto;
+import com.desertgm.app.Enums.UserRole;
 import com.desertgm.app.Models.User.User;
 import com.desertgm.app.Repositories.UserRepository;
 import com.desertgm.app.Services.User.UserService;
@@ -11,39 +13,40 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = "*")
 public class UserController {
     @Autowired
-    UserService userService;
+    private UserService userService;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    @GetMapping("/ByRole")
+    public ResponseEntity<NewResponseDto> getUserProfile(@RequestAttribute String userId) {
+        User user =  userService.getUserById(userId);
+        var users = userService.getUserbyRole(user);
+        NewResponseDto responseDto = new NewResponseDto("transação efeituada com sucesso","OK",users);
+        return ResponseEntity.ok().body(responseDto);
+    }
 
     @GetMapping("/")
-    public Object getUserProfile(HttpServletRequest request) {
-
-        String userId = (String) request.getAttribute("userId");
-
-
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-
-        if (userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ADMIN"))) {
-
-            return userRepository.findAll();
-
-        } else {
-
-            return userRepository.findById(userId).orElse(null);
-        }
-
+    public ResponseEntity<NewResponseDto> getUser(@RequestAttribute String userId){
+        User user = userService.getUserById(userId);
+        NewResponseDto responseDto = new NewResponseDto("transação efeituada com sucesso","OK",user);
+        return ResponseEntity.ok().body(responseDto);
     }
+
+
     @GetMapping("/Supervisors")
-    public ResponseEntity<List<User>> getAllSupervisors(){
+    public ResponseEntity<NewResponseDto> getAllSupervisors(){
        List<User> userList =  userService.findAllSupervisors();
-       return  ResponseEntity.ok().body(userList);
+        NewResponseDto responseDto = new NewResponseDto("transação efeituada com sucesso","OK",userList);
+       return  ResponseEntity.ok().body(responseDto);
     }
+
+
 
 }

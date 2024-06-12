@@ -15,6 +15,7 @@ public record UserDto(
         String supervisorId,
 
         String name,
+        String lastname,
         int role
 
 ) {

@@ -33,11 +33,18 @@ public class OrderController {
        return ResponseEntity.badRequest().build();
     }
 
-    @PostMapping("/")
-    public ResponseEntity<String> addOrder(@RequestBody OrderDto orderDto, @RequestAttribute("userId") String userId){
+    @GetMapping("/lead/{id}")
+    public ResponseEntity<List<Order>> getOrderbylead(@PathVariable("id") String id
+    ){
+        var orderList =  orderService.getOrdersByLeadId(id);
+        return ResponseEntity.ok().body(orderList);
+    }
+
+    @GetMapping("/{leadId}")
+    public ResponseEntity<String> addOrder(@RequestBody OrderDto orderDto, @RequestAttribute("userId") String userId,@PathVariable String leadId){
         var objectId = new ObjectId(userId);
-        Order order = new Order(objectId,OrderStatus.valueOf(orderDto.status()), orderDto.orderItems());
-        orderService.addOrder(order);
+        Order order = new Order(objectId,OrderStatus.valueOf(orderDto.status()), orderDto.orderItems(),leadId);
+        orderService.addOrder(order,leadId);
         return ResponseEntity.ok().body("Pedido Salvo com sucesso");
     }
 
@@ -45,7 +52,6 @@ public class OrderController {
     public ResponseEntity<List<Order>> getOrderList(@RequestAttribute("userId") String userId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         var user = userService.getUserById(userId);
-
         var orders = orderService.getListOrder(userId, UserRole.fromValue(user.getRole()));
         return ResponseEntity.ok().body(orders);
     }

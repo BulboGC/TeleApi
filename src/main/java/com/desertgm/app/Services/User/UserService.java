@@ -1,13 +1,18 @@
 package com.desertgm.app.Services.User;
 
+import com.desertgm.app.DTO.ResponseDto;
+import com.desertgm.app.DTO.User.UserDto;
 import com.desertgm.app.Enums.UserRole;
 import com.desertgm.app.Models.User.User;
 import com.desertgm.app.Repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +49,47 @@ public class UserService {
 
     }
 
+    public List<User> getUserbyRoleint(int role){
+      return userRepository.findByRole(role);
+    }
+
+
+    public List<User> getUserbyRole(User user){
+        List<User> users = new ArrayList<>();
+        switch(UserRole.fromValue(user.getRole())){
+            case USER:
+                users.add(user);
+                return users;
+
+            case SUPERVISOR:
+                return this.getUserbyRoleint(UserRole.SUPERVISOR.getRoleValue());
+
+            case ADMIN:
+                return userRepository.findAll();
+
+        }
+        throw new RuntimeException("Erro na busca do usuario");
+    }
+
+    public User ParseDtoToUser(UserDto userDto){
+
+        if(this.userExist(userDto.email().toLowerCase())) throw new Error("usuario já está cadastrado no sistema");
+        else {
+            String encryptedPassword = new BCryptPasswordEncoder().encode(userDto.password());
+
+            User user = new User();
+            user.setName(userDto.name());
+            user.setLastname(userDto.lastname());
+            user.setPassword(encryptedPassword);
+            user.setEmail(userDto.email().toLowerCase());
+            user.setUsername(userDto.username());
+            user.setRole(userDto.role());
+            user.setSupervisorId(userDto.supervisorId());
+            this.addUserorUpdate(user);
+            return  user;
+        }
+
+    }
 
 
 }

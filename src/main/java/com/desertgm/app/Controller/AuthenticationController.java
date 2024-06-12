@@ -1,7 +1,9 @@
 package com.desertgm.app.Controller;
 
 
-import com.desertgm.app.DTO.AuthenticationDto;
+import com.desertgm.app.DTO.Authentication.AuthenticationDto;
+import com.desertgm.app.DTO.Authentication.LoginAuthenticationResponseDto;
+import com.desertgm.app.DTO.NewResponseDto;
 import com.desertgm.app.DTO.ResponseDto;
 import com.desertgm.app.DTO.User.ForgotPassDto;
 import com.desertgm.app.DTO.User.UpdatePasswordDto;
@@ -36,83 +38,63 @@ public class AuthenticationController {
     private EmailService emailService;
     @Autowired
     private RecoveryTokenService recoveryTokenService;
-    @Autowired
-    private UserRepository userRepository;
+
 
     @PostMapping("/login")
-    public ResponseEntity<HashMap<String,String>> login(@RequestBody AuthenticationDto data){
-        HashMap<String,String> mapReturn = new HashMap<>();
-
+    public ResponseEntity<LoginAuthenticationResponseDto> login(@RequestBody AuthenticationDto data){
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(),data.password());
-
         var auth = this.authenticationManager.authenticate(usernamePassword);
         String token = tokenService.generateToken((User) auth.getPrincipal());
-        mapReturn.put("token",token);
+        LoginAuthenticationResponseDto responseDto = new LoginAuthenticationResponseDto(
+                "Login Realizado com sucesso",
+                "OK",
+                token
+        );
 
-        return ResponseEntity.ok().body(mapReturn);
+        return ResponseEntity.ok().body(responseDto);
     }
 
     @PostMapping("/register")//usuario comum 1 ADM 2 Supervisor 3
-    public ResponseEntity<HashMap<String,String>> register(@RequestBody UserDto userDto){
-
-        if(userService.userExist(userDto.email().toLowerCase())) return ResponseEntity.badRequest().build();
-        else {
-            String encryptedPassword = new BCryptPasswordEncoder().encode(userDto.password());
-
-            User user = new User();
-            user.setName(userDto.name());
-            user.setPassword(encryptedPassword);
-            user.setEmail(userDto.email().toLowerCase());
-            user.setUsername(userDto.username());
-            user.setRole(userDto.role());
-
-            userService.addUserorUpdate(user);
-
-
-            ResponseDto responseDto = new ResponseDto();
-            responseDto.addResponse("msg","Usuario salvo com sucesso");
-            responseDto.addResponse("status","OK");
-            return  ResponseEntity.ok().body(responseDto.getResponse());
-        }
+    public ResponseEntity<NewResponseDto> register(@RequestBody UserDto userDto){
+            var user = userService.ParseDtoToUser(userDto);
+            NewResponseDto responseDto = new NewResponseDto(
+                    "Usuario salvo com sucesso",
+                    "OK",user
+            );
+            return  ResponseEntity.ok().body(responseDto);
     }
 
+
     @GetMapping("/token/{token}")
-    public ResponseEntity<HashMap<String,String>> verifyToken(@PathVariable String token){
+    public ResponseEntity<NewResponseDto> verifyToken(@PathVariable String token){
         var validatetoken = tokenService.validateToken(token);
         ResponseDto responseDto = new ResponseDto();
         if(validatetoken == ""){
-            responseDto.addResponse("msg","TokenExpirado");
-            responseDto.addResponse("token","");
-            return ResponseEntity.badRequest().body(responseDto.getResponse());
+            throw new RuntimeException("TokenExpirado");
         }
         if(validatetoken != null|| validatetoken != ""){
-            responseDto.addResponse("msg","TokenExpirado");
-            responseDto.addResponse("token",validatetoken);
-            return ResponseEntity.ok().body(responseDto.getResponse());
+            NewResponseDto responseDto1 = new NewResponseDto("TokenExpirado","OK",validatetoken);
+            return ResponseEntity.ok().body(responseDto1);
         }
-        return ResponseEntity.badRequest().build();
+        throw new RuntimeException("Erro ao verificar o Token");
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<HashMap<String,String>> forgotPass(@RequestBody ForgotPassDto forgotPassDto){
+    public ResponseEntity<NewResponseDto> forgotPass(@RequestBody ForgotPassDto forgotPassDto){
         User user = userService.getUserByEmail(forgotPassDto.email());
-        ResponseDto response = new ResponseDto();
-
         if(user == null) {
-            response.addResponse("msg","o email informado não é cadastrado no sistema");
-            return ResponseEntity.badRequest().body(response.getResponse());
+            throw  new RuntimeException("o email informado não é cadastrado no sistema");
         }
         else {
             Email email = emailService.sendRecoveryPass(forgotPassDto.email().toLowerCase());
             emailService.sendEmail(email);
-            response.addResponse("msg","email enviado.");
-            return ResponseEntity.ok().body(response.getResponse());
-
+            NewResponseDto responseDto =    new NewResponseDto("email enviado","OK",null);
+            return ResponseEntity.ok().body(responseDto);
         }
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity resetPassword(@RequestBody UpdatePasswordDto updatePasswordDto){
+    public ResponseEntity<NewResponseDto> resetPassword(@RequestBody UpdatePasswordDto updatePasswordDto){
 
         User user =  recoveryTokenService.getUserWithToken(updatePasswordDto.token());
         if(user == null){
@@ -121,7 +103,8 @@ public class AuthenticationController {
         String encryptedPassword = new BCryptPasswordEncoder().encode(updatePasswordDto.password());
         user.setPassword(encryptedPassword);
         userService.addUserorUpdate(user);
-        return ResponseEntity.ok().build();
+        NewResponseDto responseDto = new NewResponseDto("Senha atualizada.","OK",null);
+        return ResponseEntity.ok().body(responseDto);
     }
 
 

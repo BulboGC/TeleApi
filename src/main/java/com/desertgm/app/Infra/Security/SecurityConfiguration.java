@@ -31,6 +31,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/user/Supervisors").permitAll()
                         .requestMatchers(HttpMethod.POST,"/auth/forgot-password").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/auth/reset-password").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

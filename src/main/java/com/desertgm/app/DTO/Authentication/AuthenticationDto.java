@@ -1,4 +1,4 @@
-package com.desertgm.app.DTO;
+package com.desertgm.app.DTO.Authentication;
 
 public record AuthenticationDto(
         String username,
