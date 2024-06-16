@@ -1,7 +1,8 @@
 package com.desertgm.app.Services.Imports;
 
-import com.desertgm.app.Models.Leads.Estabelecimento;
-import com.desertgm.app.Repositories.EstabelecimentoRepository;
+import com.desertgm.app.Models.ImportModels.Estabelecimento;
+import com.desertgm.app.Repositories.Imports.EstabelecimentoRepository;
+import com.desertgm.app.Services.GenericService;
 import com.desertgm.app.Services.UtillsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,18 +11,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 @Service
-public class EstabelecimentoService {
+public class EstabelecimentoService implements GenericService<Estabelecimento> {
     @Autowired
     UtillsService utillsService;
 
     @Autowired
     EstabelecimentoRepository estabelecimentoRepository;
-
+    @Override
     public void saveAll(List<Estabelecimento> list){
         estabelecimentoRepository.saveAll(list);
     }
 
-
+    @Override
     public Estabelecimento parseLine(String[] data, SimpleDateFormat format) {
 
         if (data == null || data.length == 0) {

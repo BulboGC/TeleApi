@@ -1,49 +1,115 @@
 package com.desertgm.app.Services.FileService;
 
+import com.desertgm.app.Services.GenericService;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 @Service
-
 public class FileService {
-    private static final int BUFFER_SIZE = 4096;
-    @Async
-    public void downloadFiles(String baseurl,String type) throws IOException {
 
-        switch (type){
+    private static final int BUFFER_SIZE = 4096;
+    private final ConcurrentHashMap<Long, String> taskStatusMap = new ConcurrentHashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(FileService.class);
+
+    @Async
+    public <T> void readCsvFile(String csvFile, Long taskId, GenericService<T> service, Class<T> clazz) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        int batchSize = 10000;
+        int linecount = 0;
+        List<T> batchList = new ArrayList<>(batchSize);
+
+        logger.info("Iniciando leitura do arquivo CSV: {}", csvFile);
+
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+            CSVReader reader = new CSVReaderBuilder(br)
+                    .withCSVParser(new CSVParserBuilder().withSeparator(';').build())
+                    .build();
+            taskStatusMap.put(taskId, "Processando");
+
+            String[] nextLine;
+            while ((nextLine = reader.readNext()) != null) {
+                linecount++;
+
+                if (nextLine.length == 0) {
+                    logger.warn("Linha inválida na contagem {}: {}", linecount, Arrays.toString(nextLine));
+                    continue; // Pula linhas inválidas
+                }
+
+                T model = service.parseLine(nextLine, format);
+
+                if (model != null) {
+                    batchList.add(model);
+                }
+
+                if (batchList.size() >= batchSize) {
+                    service.saveAll(batchList);
+                    logger.info("Linhas processadas: {} - Memória utilizada: {} bytes", linecount, Runtime.getRuntime().totalMemory());
+                    batchList.clear();
+                }
+            }
+
+            if (!batchList.isEmpty()) {
+                service.saveAll(batchList);
+                logger.info("Linhas processadas (restante): {} - Memória utilizada: {} bytes", linecount, Runtime.getRuntime().totalMemory());
+            }
+            taskStatusMap.put(taskId, "Concluído");
+        } catch (CsvValidationException | IOException e) {
+            e.printStackTrace();
+            taskStatusMap.put(taskId, "Erro: " + e.getMessage());
+
+        }
+    }
+
+    @Async
+    public void downloadFiles(String baseurl, String type) throws IOException {
+        switch (type) {
             case "Empresas":
                 for (int i = 0; i <= 9; i++) {
                     String url = baseurl + i + ".zip";
                     String fileName = type + i + ".zip";
                     downloadFile(url, "D:\\CSV_CNPJ\\Empresas\\" + fileName);
                 }
+                break;
             case "Estabelecimentos":
                 for (int i = 0; i <= 9; i++) {
                     String url = baseurl + i + ".zip";
                     String fileName = type + i + ".zip";
                     downloadFile(url, "D:\\CSV_CNPJ\\Estabelecimentos\\" + fileName);
                 }
+                break;
             case "Socios":
                 for (int i = 0; i <= 9; i++) {
                     String url = baseurl + i + ".zip";
                     String fileName = type + i + ".zip";
                     downloadFile(url, "D:\\CSV_CNPJ\\Socios\\" + fileName);
                 }
+                break;
         }
     }
+
     @Async
     private static void downloadFile(String fileUrl, String destination) throws IOException {
         URL url = new URL(fileUrl);
@@ -61,7 +127,6 @@ public class FileService {
     }
 
     public List<String> listFiles(String directory) {
-
         List<String> filePaths = new ArrayList<>();
 
         try (Stream<Path> paths = Files.walk(Paths.get(directory))) {
@@ -98,8 +163,6 @@ public class FileService {
         }
     }
 
-
-
     private void extractFile(ZipInputStream zipIn, String filePath) throws IOException {
         try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath))) {
             byte[] bytesIn = new byte[BUFFER_SIZE];
@@ -109,6 +172,4 @@ public class FileService {
             }
         }
     }
-
-
 }

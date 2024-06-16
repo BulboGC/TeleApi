@@ -1,7 +1,10 @@
 # API_CNPJ
 ## Descrição do projeto:
 
-### Sistema de Vendas integrado com um sistema de armazenamento de Leads,que utiliza as tecnologias:
+
+* **Contexto e Motivação:** O projeto é para resolver problemas nas vendas de telemarketing e integração com a Área de vendas.
+* **Objetivos:** O projeto vai ajudar a pegar os dados dos cnpj e criar leads.
+* **Público-alvo:** Empresas que queiram fazer suas vendas e não tenham leads.
 1. Java.
 2. MongoDB.
 3. SpringBoot.

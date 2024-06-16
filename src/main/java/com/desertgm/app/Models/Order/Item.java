@@ -5,18 +5,19 @@ import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.util.Date;
+
 @Data
 public class Item {
 
-    @Id
-    private String id;
+
     private String brand;
     private String model;
     private String color;
     private String year;
     private String version;
     //data limite
-    private LocalDateTime dueDate;
+    private Date dueDate;
     private Long amount;
     /*AVISTA CONSORCIO FINANCIAMENTO*/
     private String payment;

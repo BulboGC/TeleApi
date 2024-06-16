@@ -1,6 +1,6 @@
-package com.desertgm.app.Repositories;
+package com.desertgm.app.Repositories.Imports;
 
-import com.desertgm.app.Models.Leads.Company;
+import com.desertgm.app.Models.ImportModels.Company;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

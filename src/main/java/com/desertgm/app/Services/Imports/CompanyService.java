@@ -1,25 +1,27 @@
 package com.desertgm.app.Services.Imports;
 
-import com.desertgm.app.Models.Leads.Company;
-import com.desertgm.app.Repositories.CompanyRepository;
+import com.desertgm.app.Models.ImportModels.Company;
+import com.desertgm.app.Repositories.Imports.CompanyRepository;
+import com.desertgm.app.Services.GenericService;
 import com.desertgm.app.Services.UtillsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
-public class CompanyService {
+public class CompanyService implements GenericService<Company> {
     @Autowired
     UtillsService utillsService;
     @Autowired
     CompanyRepository companyRepository;
-
+    @Override
     public void saveAll(List<Company> companyList){
         companyRepository.saveAll(companyList);
     }
-
-    public Company parseLine(String[] data) {
+    @Override
+    public Company parseLine(String[] data, SimpleDateFormat simpleDateFormat) {
         Company company = new Company();
 
         // Verificar se data contém ao menos um elemento e se é válido

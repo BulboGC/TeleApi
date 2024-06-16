@@ -1,5 +1,6 @@
 package com.desertgm.app.Models.Leads;
 
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 @Document("Socio")
+@Data
 public class Socio {
     @Id
     private String id;
@@ -21,7 +23,7 @@ public class Socio {
 
     private Long qualificacao;
 
-    private LocalDateTime data_entrada_socidedade;
+    private Date data_entrada_socidedade;
 
     private Long pais;
 
@@ -32,9 +34,6 @@ public class Socio {
     private Long qualificacao_representante;
 
     private int faixa_etaria;
-
-
-
 
 
     /*1 para os intervalos entre 0 a 12 anos;

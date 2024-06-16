@@ -1,4 +1,4 @@
-package com.desertgm.app.Models.Leads;
+package com.desertgm.app.Models.ImportModels;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

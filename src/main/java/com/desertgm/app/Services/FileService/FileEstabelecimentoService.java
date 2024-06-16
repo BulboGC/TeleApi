@@ -1,6 +1,6 @@
 package com.desertgm.app.Services.FileService;
 
-import com.desertgm.app.Models.Leads.Estabelecimento;
+import com.desertgm.app.Models.ImportModels.Estabelecimento;
 import com.desertgm.app.Services.Imports.EstabelecimentoService;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;

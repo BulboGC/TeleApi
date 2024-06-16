@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
-@RestController
+
 public class CompanyController {
+    /*
     @Autowired
     FileService fileService;
     @PostMapping("/Company-files")
@@ -18,5 +19,5 @@ public class CompanyController {
         fileService.downloadFiles(url,"Empresas");
         return ResponseEntity.ok().body("Em processamento");
     }
-
+*/
 }

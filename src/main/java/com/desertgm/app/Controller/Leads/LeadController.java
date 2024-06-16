@@ -1,6 +1,7 @@
 package com.desertgm.app.Controller.Leads;
 
 import com.desertgm.app.DTO.LeadDto;
+import com.desertgm.app.DTO.NewResponseDto;
 import com.desertgm.app.Enums.UserRole;
 import com.desertgm.app.Models.Leads.Lead;
 import com.desertgm.app.Models.User.User;
@@ -38,6 +39,12 @@ public class LeadController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity putLead(@RequestBody LeadDto leadDto,@RequestAttribute("userId") String userId,@PathVariable("id") String id){
+        leadService.editLead(id,leadDto);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/distribute-Lead/{cnae}")
     public ResponseEntity distributeLeads(@PathVariable Long cnae){
         var leads = leadService.getLeadsPerCnae(cnae);
@@ -48,9 +55,10 @@ public class LeadController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Lead>> getLeads(@RequestAttribute("userId") String userId){
+    public ResponseEntity<NewResponseDto> getLeads(@RequestAttribute("userId") String userId){
        User user =  userService.getUserById(userId);
        List<Lead> list =  leadService.getLeadsPerRole(user.getId(), user.getRole() );
-       return ResponseEntity.ok().body(list);
+       NewResponseDto responseDto = new NewResponseDto("transação realizada com sucesso","OK",list);
+       return ResponseEntity.ok().body(responseDto);
     }
 }

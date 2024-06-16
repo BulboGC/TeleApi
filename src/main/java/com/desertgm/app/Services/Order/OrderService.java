@@ -1,8 +1,10 @@
 package com.desertgm.app.Services.Order;
 
+import com.desertgm.app.DTO.Order.OrderDto;
 import com.desertgm.app.Enums.Lead.LeadStatus;
 import com.desertgm.app.Enums.UserRole;
 import com.desertgm.app.Models.Leads.Lead;
+import com.desertgm.app.Models.Order.Item;
 import com.desertgm.app.Models.Order.Order;
 import com.desertgm.app.Models.User.User;
 import com.desertgm.app.Repositories.LeadRepository;
@@ -10,6 +12,7 @@ import com.desertgm.app.Repositories.OrderRepository;
 import com.desertgm.app.Repositories.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.aggregation.BooleanOperators;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +32,10 @@ public class OrderService {
     public void addOrder(Order order,String leadId){
         var lead = leadRepository.findById(leadId);
         Lead newlead = lead.get();
+        /* Aterar o Status do Lead*/
         newlead.setStatus(LeadStatus.CONFIRMED.getLeadStatus());
         leadRepository.save(newlead);
+        /* Salvar no banco*/
         orderRepository.save(order);
     }
 
@@ -46,7 +51,11 @@ public class OrderService {
     }
 
 
+    public Order editOrder(Order order, Item item){
 
+        order.setOrderItem(item);
+        return orderRepository.save(order);
+    }
 
 
     public List<Order> getListOrder(String userId, UserRole userRole) throws RuntimeException {

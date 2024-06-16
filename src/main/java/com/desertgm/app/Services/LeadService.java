@@ -7,12 +7,14 @@ import com.desertgm.app.Models.Leads.Lead;
 import com.desertgm.app.Models.User.User;
 import com.desertgm.app.Repositories.LeadRepository;
 import com.desertgm.app.Repositories.UserRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +25,8 @@ public class LeadService {
     private UserRepository userRepository;
 
     public List<Lead> getLeadsPerRole(String id, int role){
+
+
         var roleStr =  UserRole.fromValue(role);
         switch (roleStr){
             case USER:
@@ -106,4 +110,12 @@ public class LeadService {
         }
     }
 
+
+    public Lead editLead(String leadId,LeadDto leadDto){
+        Optional<Lead> lead = leadRepository.findById(leadId);
+        Lead lead1 = lead.get();
+        BeanUtils.copyProperties(leadDto,lead1);
+
+        return leadRepository.save(lead1) ;
+    }
 }
