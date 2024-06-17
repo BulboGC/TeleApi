@@ -1,6 +1,7 @@
-package com.desertgm.app.DTO;
+package com.desertgm.app.DTO.Lead;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public record LeadDto(
         Long identificadorMatrizFilial,
@@ -21,7 +22,7 @@ public record LeadDto(
         /*PENDING,CONFIRMED,SUSPENDED,REFUSED */
          int status,
 
-         LocalDateTime dateForCall,
+         Date dateForCall,
 
          String comments,
 

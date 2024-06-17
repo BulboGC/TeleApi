@@ -1,18 +1,19 @@
 package com.desertgm.app.Controller.Leads;
 
-import com.desertgm.app.DTO.LeadDto;
+import com.desertgm.app.DTO.Lead.LeadDto;
+import com.desertgm.app.DTO.Lead.LeadStatusDto;
 import com.desertgm.app.DTO.NewResponseDto;
-import com.desertgm.app.Enums.UserRole;
+import com.desertgm.app.Enums.Lead.LeadStatus;
 import com.desertgm.app.Models.Leads.Lead;
 import com.desertgm.app.Models.User.User;
+import com.desertgm.app.Repositories.LeadRepository;
 import com.desertgm.app.Services.LeadService;
 import com.desertgm.app.Services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RequestMapping("/lead")
@@ -23,6 +24,9 @@ public class LeadController {
     LeadService leadService;
     @Autowired
     UserService userService;
+    @Autowired
+    private LeadRepository leadRepository;
+
     @PostMapping("/addLeads")
     public ResponseEntity getAllLeads(@RequestBody List<Lead> list){
 
@@ -30,6 +34,24 @@ public class LeadController {
         return  ResponseEntity.ok().build();
 
     }
+
+    @PutMapping("/status/{leadId}")
+    public ResponseEntity<NewResponseDto> updateStatus(@PathVariable String leadId, @RequestBody LeadStatusDto body){
+        switch (body.status()){
+            case 3:
+                leadService.updateStatusandDate(LeadStatus.fromValue(body.status()), leadId ,body.datetocall());
+            case 4:
+                leadService.updateStatusandDate(LeadStatus.fromValue(body.status()), leadId ,null);
+        }
+        NewResponseDto responseDto = new NewResponseDto("status do Lead atualizado com sucesso","OK",null);
+        return ResponseEntity.ok().body(responseDto);
+    }
+
+
+
+
+
+
 
     @PostMapping("/add")
     public ResponseEntity postLead(@RequestBody LeadDto leadDto,@RequestAttribute("userId") String userId){

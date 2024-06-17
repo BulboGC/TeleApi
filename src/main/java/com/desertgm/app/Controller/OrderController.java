@@ -3,6 +3,7 @@ package com.desertgm.app.Controller;
 import com.desertgm.app.DTO.NewResponseDto;
 import com.desertgm.app.DTO.Order.ItemDto;
 import com.desertgm.app.DTO.Order.OrderDto;
+import com.desertgm.app.DTO.Order.OrderstatusDto;
 import com.desertgm.app.Enums.Order.OrderStatus;
 import com.desertgm.app.Enums.UserRole;
 import com.desertgm.app.Models.Order.Item;
@@ -66,6 +67,14 @@ public class OrderController {
         }
 
 
+        @PutMapping("/status/{orderId}")
+        public ResponseEntity<NewResponseDto> updateStatus(@PathVariable String orderId,@RequestBody OrderstatusDto OrderStatusdto){
+
+
+           var order =  orderService.updateStatus(   OrderStatusdto.status(),orderId);
+           NewResponseDto responseDto = new NewResponseDto("status alterado com sucesso","OK",order);
+           return ResponseEntity.ok().body(responseDto);
+        }
 
     @PostMapping("/{leadId}")
     public ResponseEntity<String> addOrder(

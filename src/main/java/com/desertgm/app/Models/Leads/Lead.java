@@ -7,6 +7,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.Date;
+
 @Data
 @Document("Lead")
 public class Lead {
@@ -36,7 +38,7 @@ public class Lead {
     /*PENDING,CONFIRMED,SUSPENDED,REFUSED */
     private int status;
 
-    private LocalDateTime dateForCall;
+    private Date dateForCall;
 
     private String comments;
 
@@ -47,7 +49,7 @@ public class Lead {
         this.userId = "";
     }
 
-    public Lead(Long identificadorMatrizFilial, Long CNPJ, String razaoSocial, String clientName, String email, String phone1, String phone2, Long CNAE, String activity, int status, LocalDateTime dateForCall, String comments, String userId) {
+    public Lead(Long identificadorMatrizFilial, Long CNPJ, String razaoSocial, String clientName, String email, String phone1, String phone2, Long CNAE, String activity, int status, Date dateForCall, String comments, String userId) {
         this.identificadorMatrizFilial = identificadorMatrizFilial;
         this.CNPJ = CNPJ;
         this.razaoSocial = razaoSocial;

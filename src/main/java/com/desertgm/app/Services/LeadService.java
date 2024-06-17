@@ -1,6 +1,6 @@
 package com.desertgm.app.Services;
 
-import com.desertgm.app.DTO.LeadDto;
+import com.desertgm.app.DTO.Lead.LeadDto;
 import com.desertgm.app.Enums.Lead.LeadStatus;
 import com.desertgm.app.Enums.UserRole;
 import com.desertgm.app.Models.Leads.Lead;
@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +24,10 @@ public class LeadService {
     @Autowired
     private UserRepository userRepository;
 
+    public Lead getLeadByLeadId(String leadId){
+       Optional<Lead> optionalLead =  leadRepository.findById(leadId);
+       return optionalLead.get();
+    }
     public List<Lead> getLeadsPerRole(String id, int role){
 
 
@@ -117,5 +121,15 @@ public class LeadService {
         BeanUtils.copyProperties(leadDto,lead1);
 
         return leadRepository.save(lead1) ;
+    }
+
+    public void updateStatusandDate(LeadStatus leadStatus, String leadId, Date date){
+        Lead lead =  this.getLeadByLeadId(leadId);
+        if(date != null){
+            lead.setDateForCall(date);
+        }
+       lead.setStatus(leadStatus.getLeadStatus());
+
+       leadRepository.save(lead);
     }
 }

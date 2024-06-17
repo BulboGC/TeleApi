@@ -2,6 +2,7 @@ package com.desertgm.app.Services.Order;
 
 import com.desertgm.app.DTO.Order.OrderDto;
 import com.desertgm.app.Enums.Lead.LeadStatus;
+import com.desertgm.app.Enums.Order.OrderStatus;
 import com.desertgm.app.Enums.UserRole;
 import com.desertgm.app.Models.Leads.Lead;
 import com.desertgm.app.Models.Order.Item;
@@ -82,4 +83,20 @@ public class OrderService {
     public List<Order> getAllOrders(){
        return orderRepository.findAll();
     }
+
+    public Order updateStatus(OrderStatus status,String orderId){
+
+       Optional<Order> OpOrder =  orderRepository.findById(orderId);
+       var order = OpOrder.get();
+       if(order.getStatus() == OrderStatus.PAID){
+           throw new RuntimeException("não é possível alterar o status de um pedido já finalizado");
+       }
+        if(order.getStatus() == OrderStatus.CANCELLED){
+            throw new RuntimeException("não é possível alterar o status de um pedido cancelado");
+        }
+       order.setStatus(status);
+       orderRepository.save(order);
+       return order;
+    }
+
 }
