@@ -34,6 +34,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST,"/auth/reset-password").permitAll()
                         .anyRequest().authenticated()
                 )
+                .requiresChannel(channel -> channel.anyRequest().requiresSecure())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
 
