@@ -77,6 +77,7 @@ public class AuthenticationController {
             return ResponseEntity.ok().body(responseDto1);
         }
         throw new RuntimeException("Erro ao verificar o Token");
+
     }
 
     @PostMapping("/forgot-password")
