@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @RequestMapping("/lead")
@@ -49,7 +50,13 @@ public class LeadController {
 
 
 
-
+    @PostMapping("/comment/{leadId}")
+    public ResponseEntity<NewResponseDto> addComment(@PathVariable String leadId,@RequestBody HashMap<String,String> comments){
+        Lead lead = leadService.getLeadByLeadId(leadId);
+        var response = leadService.addOrUpdateComment(lead,comments);
+        NewResponseDto responseDto = new NewResponseDto("comentario atualizado com sucesso","OK",response);
+        return ResponseEntity.ok().body(responseDto);
+    }
 
 
 
@@ -83,4 +90,14 @@ public class LeadController {
        NewResponseDto responseDto = new NewResponseDto("transação realizada com sucesso","OK",list);
        return ResponseEntity.ok().body(responseDto);
     }
+
+    @PostMapping("/estabelecimento/{cnae}")
+    public ResponseEntity<NewResponseDto> estabelecimentoToLead(@PathVariable Long cnae){
+     List<Lead> leadList = leadService.EstabelecimentoToLeadByCnae(cnae);
+     NewResponseDto responseDto = new NewResponseDto("dados cadastrados com sucesso","OK",leadList);
+     return ResponseEntity.ok().body(responseDto);
+    }
+
+
+
 }

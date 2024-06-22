@@ -2,7 +2,9 @@ package com.desertgm.app.Models.ImportModels;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
 @Data
@@ -10,11 +12,8 @@ import java.util.Date;
 public class Estabelecimento {
 
     //https://dadosabertos.rfb.gov.br/CNPJ/Estabelecimentos0.zip
-    private Long id;
-    @Id
+    @Indexed
     private Long cnpjFull;
-
-
     private Long cnpjBaseId;
 
     private String cnpjOrdem;
@@ -28,7 +27,7 @@ public class Estabelecimento {
 
     private Long situtacaoCadastralId; // Alterado para Long
 
-    private Date dataSituacaoCadastral;
+    private String dataSituacaoCadastral;
 
 
     private Long motivoSituacaoCadastralId; // Alterado para Long
@@ -38,9 +37,10 @@ public class Estabelecimento {
 
     private Long paisId; // Alterado para Long
 
-    private Date dataInicioAtividade;
+    private String dataInicioAtividade;
 
-
+    @Indexed
+    @Field(name = "cnaeFiscalPrincialId")
     private Long cnaeFiscalPrincipalId; // Alterado para Long
 
 
@@ -71,5 +71,8 @@ public class Estabelecimento {
     private String fax;
     private String email;
     private String situacaoespecial;
-    private Date datasituacaoespecial;
+    private String datasituacaoespecial;
+
+
+
 }

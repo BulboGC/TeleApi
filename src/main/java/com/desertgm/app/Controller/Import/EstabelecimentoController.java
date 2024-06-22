@@ -2,11 +2,13 @@ package com.desertgm.app.Controller.Import;
 
 import com.desertgm.app.Models.ImportModels.Estabelecimento;
 import com.desertgm.app.Models.Leads.Socio;
+import com.desertgm.app.Services.FileService.FileEstabelecimentoService;
 import com.desertgm.app.Services.FileService.FileService;
 import com.desertgm.app.Services.GenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,21 +20,24 @@ public class EstabelecimentoController {
     @Autowired
     FileService fileService;
     @Autowired
-    GenericService<Estabelecimento> estabelecimentoGenericService;
+    FileEstabelecimentoService fileEstabelecimentoService;
+
 
     private AtomicLong taskIdGenerator = new AtomicLong();
-    @PostMapping("/estabelecimento")
-    public ResponseEntity<?> addEstabelecimento() {
-        String path = "D:\\JavaProjects\\ReceitaAPI\\arquivos\\Estabelecimento\\estabelecimentoscsv";
-        List<String> directories = fileService.listFiles(path);
+    @PostMapping("/estabelecimento/{id}")
+    public ResponseEntity<?> addEstabelecimento(@PathVariable String id) {
+        String path = "/media/desert/HDD/CSV_CNPJ/Estabelecimentos/K3241.K03200Y" + id + ".D40511.ESTABELE";
+
+        //List<String> directories = fileService.listFiles(path);
 
         long taskId = taskIdGenerator.incrementAndGet();
-        for (String str : directories) {
+        /*for (String str : directories) {
+        }*/
+            fileEstabelecimentoService.readCsvFile(path,taskId);
 
 
-            fileService.readCsvFile(str, taskId,estabelecimentoGenericService, Estabelecimento.class);
 
-        }
+       // fileEstabelecimentoService.readCsvFile("/media/desert/HDD/CSV_CNPJ/Estabelecimentos/K3241.K03200Y0.D40511.ESTABELE",taskId);
     return ResponseEntity.ok().body("aguarde o processamento");
     }
 }

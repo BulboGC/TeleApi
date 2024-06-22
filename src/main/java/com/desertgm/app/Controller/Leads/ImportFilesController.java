@@ -17,6 +17,7 @@ public class ImportFilesController {
 
     @PostMapping("/download-zip/{type}")
     public ResponseEntity downloadZipFilesCompany(@PathVariable("type") String type) throws IOException {
+        /*Empresas | Estabelecimentos | Socios*/
         String url = "https://dadosabertos.rfb.gov.br/CNPJ/" + type;
         fileService.downloadFiles(url,type);
         return ResponseEntity.ok().body("Em processamento");

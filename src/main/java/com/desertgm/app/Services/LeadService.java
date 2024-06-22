@@ -3,18 +3,19 @@ package com.desertgm.app.Services;
 import com.desertgm.app.DTO.Lead.LeadDto;
 import com.desertgm.app.Enums.Lead.LeadStatus;
 import com.desertgm.app.Enums.UserRole;
+import com.desertgm.app.Models.ImportModels.Estabelecimento;
 import com.desertgm.app.Models.Leads.Lead;
 import com.desertgm.app.Models.User.User;
+import com.desertgm.app.Repositories.Imports.EstabelecimentoRepository;
 import com.desertgm.app.Repositories.LeadRepository;
 import com.desertgm.app.Repositories.UserRepository;
+import com.desertgm.app.Services.Imports.EstabelecimentoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +24,8 @@ public class LeadService {
     private LeadRepository leadRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private EstabelecimentoRepository estabelecimentoRepository;
 
     public Lead getLeadByLeadId(String leadId){
        Optional<Lead> optionalLead =  leadRepository.findById(leadId);
@@ -62,7 +65,7 @@ public class LeadService {
        return leadRepository.save(lead);
     }
 
-    @Async
+
     public void addLeadList(List<Lead> list){
         leadRepository.saveAll(list);
     }
@@ -91,7 +94,6 @@ public class LeadService {
     public List<Lead> getLeadsPerCnae(Long cnae){
        var users = leadRepository.findByCNAEAndUserId(cnae,"");
         return  users;
-
     }
 
     public void distributeLeads(List<Lead> leads, List<User> users) {
@@ -132,4 +134,42 @@ public class LeadService {
 
        leadRepository.save(lead);
     }
+
+    public Lead addOrUpdateComment(Lead lead, HashMap<String,String> comment){
+        if(comment.get("comment").isBlank()){
+            throw new RuntimeException("não é possivel salvar usuarios vazios");
+        }
+        lead.setComments(comment.get("comment"));
+        return leadRepository.save(lead);
+    }
+
+    public List<Lead> EstabelecimentoToLeadByCnae(Long cnae){
+       List<Estabelecimento> list = estabelecimentoRepository.findByCnaeFiscalPrincipalId(cnae);
+       List<Lead> leads = new ArrayList<>();
+       list.forEach((estabelecimento)->{
+
+           Lead lead =new Lead();
+           lead.setCNPJ(Long.parseLong(estabelecimento.getCnpjBaseId() + estabelecimento.getCnpjOrdem()+ estabelecimento.getCnpjDV()));
+           lead.setEmail(estabelecimento.getEmail());
+           lead.setStatus(LeadStatus.PENDING.getLeadStatus());
+           lead.setCNAE(estabelecimento.getCnaeFiscalPrincipalId());
+           lead.setIdentificadorMatrizFilial(estabelecimento.getIdentificadorMatrizFilialId());
+
+           if(estabelecimento.getDdd1() != null &&  estabelecimento.getTelefone1() != null){
+               lead.setPhone1(estabelecimento.getDdd1() + estabelecimento.getTelefone1());
+           }
+
+           if(estabelecimento.getDdd2() != null &&  estabelecimento.getTelefone2() != null){
+               lead.setPhone2(estabelecimento.getDdd2()+ estabelecimento.getTelefone2());
+           }
+
+
+           //lead.setRazaoSocial();
+            leads.add(lead);
+       });
+
+       return leadRepository.saveAll(leads);
+    }
+
+
 }

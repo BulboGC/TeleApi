@@ -5,6 +5,7 @@ import com.desertgm.app.Services.Imports.EstabelecimentoService;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvMalformedLineException;
 import com.opencsv.exceptions.CsvValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,33 +44,44 @@ public class FileEstabelecimentoService {
                     .build();
             taskStatusMap.put(taskId, "Processando");
 
-
             String[] nextLine;
             while ((nextLine = reader.readNext()) != null) {
                 linecount++;
 
-                if (nextLine.length < 30) {
-                    logger.warn("Linha inválida na contagem {}: {}", linecount, Arrays.toString(nextLine));
-                    continue; // Pula linhas inválidas
-                }
+                try {
+                    if (nextLine.length < 30) {
+                        logger.warn("Linha inválida na contagem {}: {}", linecount, Arrays.toString(nextLine));
+                        continue; // Pula linhas inválidas
+                    }
 
-                Estabelecimento model = estabelecimentoService.parseLine(nextLine, format);
+                    Estabelecimento model = estabelecimentoService.parseLine(nextLine, format);
 
-                if (model != null) {
-                    batchList.add(model);
-                }
+                    if (model != null) {
+                        batchList.add(model);
+                    }
 
-                if (batchList.size() >= batchSize) {
-                    estabelecimentoService.saveAll(batchList);
-                    logger.info("Linhas processadas: {} - Memória utilizada: {} bytes", linecount, Runtime.getRuntime().totalMemory());
-                    batchList.clear();
+                    if (batchList.size() >= batchSize) {
+                        estabelecimentoService.saveAll(batchList);
+                        logger.info("Linhas processadas: {} - Memória utilizada: {} bytes", linecount, Runtime.getRuntime().totalMemory());
+                        batchList.clear();
+                        System.gc();
+                    }
+
+                } catch (Exception e) {
+                    logger.warn("Erro ao processar linha {}: {}", linecount, Arrays.toString(nextLine), e);
                 }
             }
-        } catch (CsvValidationException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
+            // Salvar qualquer batch restante
+            if (!batchList.isEmpty()) {
+                estabelecimentoService.saveAll(batchList);
+                logger.info("Linhas processadas: {} - Memória utilizada: {} bytes", linecount, Runtime.getRuntime().totalMemory());
+                batchList.clear();
+            }
+
+        } catch (IOException | CsvValidationException e) {
+            logger.error("Erro ao ler o arquivo CSV {}: {}", csvFile, e.getMessage());
+        }
     }
+
 }

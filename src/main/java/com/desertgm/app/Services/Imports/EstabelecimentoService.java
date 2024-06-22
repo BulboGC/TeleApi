@@ -1,6 +1,7 @@
 package com.desertgm.app.Services.Imports;
 
 import com.desertgm.app.Models.ImportModels.Estabelecimento;
+import com.desertgm.app.Models.Leads.Lead;
 import com.desertgm.app.Repositories.Imports.EstabelecimentoRepository;
 import com.desertgm.app.Services.GenericService;
 import com.desertgm.app.Services.UtillsService;
@@ -58,9 +59,9 @@ public class EstabelecimentoService implements GenericService<Estabelecimento> {
             estabelecimento.setSitutacaoCadastralId(Long.parseLong(data[5]));
         }
 
-        if (dataSituacaoCadastral != null && utillsService.isDateValid(dataSituacaoCadastral)) {
+        /*if (dataSituacaoCadastral != null && utillsService.isDateValid(dataSituacaoCadastral)) {
             estabelecimento.setDataSituacaoCadastral(dataSituacaoCadastral);
-        }
+        }*/
 
         if (utillsService.isValidLong(data[7])) {
             estabelecimento.setMotivoSituacaoCadastralId(Long.parseLong(data[7]));
@@ -72,9 +73,9 @@ public class EstabelecimentoService implements GenericService<Estabelecimento> {
             estabelecimento.setPaisId(Long.parseLong(data[9]));
         }
 
-        if (dataInicioAtividades != null && utillsService.isDateValid(dataInicioAtividades)) {
+       /* if (dataInicioAtividades != null && utillsService.isDateValid(dataInicioAtividades)) {
             estabelecimento.setDataInicioAtividade(dataInicioAtividades);
-        }
+        }*/
 
         if (utillsService.isValidLong(data[11])) {
             estabelecimento.setCnaeFiscalPrincipalId(Long.parseLong(data[11]));
@@ -105,13 +106,14 @@ public class EstabelecimentoService implements GenericService<Estabelecimento> {
         estabelecimento.setEmail(utillsService.truncate(data[27], 255));
         estabelecimento.setSituacaoespecial(utillsService.truncate(data[28], 255));
 
-        if (dateSituacaoEspecial != null && utillsService.isDateValid(dateSituacaoEspecial)) {
+        /*if (dateSituacaoEspecial != null && utillsService.isDateValid(dateSituacaoEspecial)) {
             estabelecimento.setDatasituacaoespecial(dateSituacaoEspecial);
-        }
+        }*/
 
         return estabelecimento;
 
     }
+
 
 
 

@@ -68,6 +68,7 @@ public class FileService {
                     service.saveAll(batchList);
                     logger.info("Linhas processadas: {} - Memória utilizada: {} bytes", linecount, Runtime.getRuntime().totalMemory());
                     batchList.clear();
+                    System.gc();
                 }
             }
 
@@ -76,35 +77,38 @@ public class FileService {
                 logger.info("Linhas processadas (restante): {} - Memória utilizada: {} bytes", linecount, Runtime.getRuntime().totalMemory());
             }
             taskStatusMap.put(taskId, "Concluído");
-        } catch (CsvValidationException | IOException e) {
-            e.printStackTrace();
-            taskStatusMap.put(taskId, "Erro: " + e.getMessage());
-
+        } catch (CsvValidationException e) {
+            logger.warn("Erro na linha {}: {}", linecount, e.getMessage());
+        } catch (Exception e) {
+            logger.warn("Erro ao processar linha {}", linecount, e);
         }
     }
 
-    @Async
+
     public void downloadFiles(String baseurl, String type) throws IOException {
+        String basePath = "/media/desert/HDD/csv_teste/";  // Substitua "username" pelo seu nome de usuário no Ubuntu
+        Files.createDirectories(Paths.get(basePath + type));
+
         switch (type) {
             case "Empresas":
                 for (int i = 0; i <= 9; i++) {
                     String url = baseurl + i + ".zip";
                     String fileName = type + i + ".zip";
-                    downloadFile(url, "D:\\CSV_CNPJ\\Empresas\\" + fileName);
+                    downloadFile(url, basePath + "Empresas/" + fileName);
                 }
                 break;
             case "Estabelecimentos":
                 for (int i = 0; i <= 9; i++) {
                     String url = baseurl + i + ".zip";
                     String fileName = type + i + ".zip";
-                    downloadFile(url, "D:\\CSV_CNPJ\\Estabelecimentos\\" + fileName);
+                    downloadFile(url, basePath + "Estabelecimentos/" + fileName);
                 }
                 break;
             case "Socios":
                 for (int i = 0; i <= 9; i++) {
                     String url = baseurl + i + ".zip";
                     String fileName = type + i + ".zip";
-                    downloadFile(url, "D:\\CSV_CNPJ\\Socios\\" + fileName);
+                    downloadFile(url, basePath + "Socios/" + fileName);
                 }
                 break;
         }
@@ -125,6 +129,8 @@ public class FileService {
             }
         }
     }
+
+    /*  lista os arquivos de um diretorio */
 
     public List<String> listFiles(String directory) {
         List<String> filePaths = new ArrayList<>();
