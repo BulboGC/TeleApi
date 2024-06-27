@@ -1,8 +1,7 @@
-package com.desertgm.app.Repositories;
+package com.desertgm.app.Repositories.prod;
 
 import com.desertgm.app.Models.Order.Order;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

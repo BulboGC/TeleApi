@@ -1,16 +1,13 @@
 package com.desertgm.app.Services.Imports;
 
 import com.desertgm.app.Models.ImportModels.Socios;
-import com.desertgm.app.Models.Leads.Socio;
 import com.desertgm.app.Repositories.Imports.SociosRepository;
-import com.desertgm.app.Repositories.SocioRepository;
 import com.desertgm.app.Services.GenericService;
 import com.desertgm.app.Services.UtillsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 

@@ -1,13 +1,11 @@
 package com.desertgm.app.Services.User;
 
-import com.desertgm.app.DTO.ResponseDto;
 import com.desertgm.app.DTO.User.UserDto;
 import com.desertgm.app.Enums.UserRole;
 import com.desertgm.app.Models.User.User;
-import com.desertgm.app.Repositories.UserRepository;
+import com.desertgm.app.Repositories.prod.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

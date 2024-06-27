@@ -11,16 +11,17 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
-public class CompanyService implements GenericService<Company> {
+public class CompanyService /*implements GenericService<Company>*/ {
     @Autowired
     UtillsService utillsService;
     @Autowired
     CompanyRepository companyRepository;
-    @Override
+
+
     public void saveAll(List<Company> companyList){
         companyRepository.saveAll(companyList);
     }
-    @Override
+    /*@Override
     public Company parseLine(String[] data, SimpleDateFormat simpleDateFormat) {
         Company company = new Company();
 
@@ -65,5 +66,11 @@ public class CompanyService implements GenericService<Company> {
         }
 
         return company;
+    }*/
+
+    public Company findByCnpj(String cnpj){
+       return companyRepository.findByCnpjBase(cnpj);
+
     }
+
 }

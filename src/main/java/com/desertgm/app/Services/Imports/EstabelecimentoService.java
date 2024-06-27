@@ -1,29 +1,33 @@
 package com.desertgm.app.Services.Imports;
 
+import com.desertgm.app.Enums.Lead.LeadStatus;
+
+import com.desertgm.app.Models.ImportModels.Company;
 import com.desertgm.app.Models.ImportModels.Estabelecimento;
 import com.desertgm.app.Models.Leads.Lead;
 import com.desertgm.app.Repositories.Imports.EstabelecimentoRepository;
-import com.desertgm.app.Services.GenericService;
 import com.desertgm.app.Services.UtillsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 @Service
-public class EstabelecimentoService implements GenericService<Estabelecimento> {
+public class EstabelecimentoService  {
     @Autowired
     UtillsService utillsService;
-
+    @Autowired
+    CompanyService companyService;
     @Autowired
     EstabelecimentoRepository estabelecimentoRepository;
-    @Override
+
     public void saveAll(List<Estabelecimento> list){
         estabelecimentoRepository.saveAll(list);
     }
 
-    @Override
+
     public Estabelecimento parseLine(String[] data, SimpleDateFormat format) {
 
         if (data == null || data.length == 0) {
@@ -44,7 +48,7 @@ public class EstabelecimentoService implements GenericService<Estabelecimento> {
 
         Estabelecimento estabelecimento = new Estabelecimento();
         estabelecimento.setCnpjFull(Long.parseLong(data[0] + data[1] + data[2] ));
-        estabelecimento.setCnpjBaseId(Long.parseLong(data[0]));
+      //  estabelecimento.setCnpjBaseId(Long.parseLong(data[0]));
         estabelecimento.setCnpjOrdem(utillsService.truncate(data[1], 255));
         estabelecimento.setCnpjDV(utillsService.truncate(data[2], 255));
 
@@ -114,7 +118,30 @@ public class EstabelecimentoService implements GenericService<Estabelecimento> {
 
     }
 
+    public List<Lead> trasformInLead(List<Estabelecimento> list){
+        List<Lead> leadList = new ArrayList<>();
+        for( Estabelecimento estabelecimento : list){
 
+            Company company = companyService.findByCnpj(estabelecimento.getCnpjBaseId());
+            if(company != null){
+                Lead lead = new Lead();
+                lead.setCNPJ(estabelecimento.getCnpjFull());
+                lead.setCNAE(estabelecimento.getCnaeFiscalPrincipalId());
+                lead.setPhone1(estabelecimento.getDdd1() + estabelecimento.getTelefone1());
+                lead.setRazaoSocial(company.getRazaoSocial());
+                lead.setPorte(company.getPorteEmpresa());
+                lead.setPhone2(estabelecimento.getDdd2() + estabelecimento.getTelefone2());
+                lead.setStatus(LeadStatus.PENDING.getLeadStatus());
+                leadList.add(lead);
+            }
 
+        }
 
+        return leadList;
+    }
+
+    public List<Estabelecimento> findByCnae(Long cnae){
+        return estabelecimentoRepository.findByCnaeFiscalPrincipalId(cnae);
+
+    }
 }

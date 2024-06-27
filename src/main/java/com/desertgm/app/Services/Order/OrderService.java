@@ -1,6 +1,5 @@
 package com.desertgm.app.Services.Order;
 
-import com.desertgm.app.DTO.Order.OrderDto;
 import com.desertgm.app.Enums.Lead.LeadStatus;
 import com.desertgm.app.Enums.Order.OrderStatus;
 import com.desertgm.app.Enums.UserRole;
@@ -8,15 +7,14 @@ import com.desertgm.app.Models.Leads.Lead;
 import com.desertgm.app.Models.Order.Item;
 import com.desertgm.app.Models.Order.Order;
 import com.desertgm.app.Models.User.User;
-import com.desertgm.app.Repositories.LeadRepository;
-import com.desertgm.app.Repositories.OrderRepository;
-import com.desertgm.app.Repositories.UserRepository;
-import org.bson.types.ObjectId;
+import com.desertgm.app.Repositories.prod.LeadRepository;
+import com.desertgm.app.Repositories.prod.OrderRepository;
+import com.desertgm.app.Repositories.prod.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.aggregation.BooleanOperators;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,6 +93,12 @@ public class OrderService {
             throw new RuntimeException("não é possível alterar o status de um pedido cancelado");
         }
        order.setStatus(status);
+
+        if(status == OrderStatus.PAID|| status == OrderStatus.CANCELLED){
+            order.setOrderClosedAt(LocalDateTime.now());
+        }
+
+
        orderRepository.save(order);
        return order;
     }

@@ -4,16 +4,16 @@ import com.desertgm.app.DTO.Lead.LeadDto;
 import com.desertgm.app.DTO.Lead.LeadStatusDto;
 import com.desertgm.app.DTO.NewResponseDto;
 import com.desertgm.app.Enums.Lead.LeadStatus;
+import com.desertgm.app.Models.ImportModels.Estabelecimento;
 import com.desertgm.app.Models.Leads.Lead;
 import com.desertgm.app.Models.User.User;
-import com.desertgm.app.Repositories.LeadRepository;
+import com.desertgm.app.Repositories.prod.LeadRepository;
 import com.desertgm.app.Services.LeadService;
 import com.desertgm.app.Services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,13 +60,13 @@ public class LeadController {
 
 
 
-    @PostMapping("/add")
+   /* @PostMapping("/add")
     public ResponseEntity postLead(@RequestBody LeadDto leadDto,@RequestAttribute("userId") String userId){
 
         Lead lead =  leadService.DtoToLead(leadDto,userId);
         leadService.addLead(lead);
         return ResponseEntity.ok().build();
-    }
+    }*/
 
     @PutMapping("/{id}")
     public ResponseEntity putLead(@RequestBody LeadDto leadDto,@RequestAttribute("userId") String userId,@PathVariable("id") String id){
@@ -91,9 +91,9 @@ public class LeadController {
        return ResponseEntity.ok().body(responseDto);
     }
 
-    @PostMapping("/estabelecimento/{cnae}")
-    public ResponseEntity<NewResponseDto> estabelecimentoToLead(@PathVariable Long cnae){
-     List<Lead> leadList = leadService.EstabelecimentoToLeadByCnae(cnae);
+    @PostMapping("/estabelecimento")
+    public ResponseEntity<NewResponseDto> estabelecimentoToLead(@RequestBody List<Estabelecimento> estabelecimento){
+     List<Lead> leadList = leadService.EstabelecimentoToLeadByCnae(estabelecimento);
      NewResponseDto responseDto = new NewResponseDto("dados cadastrados com sucesso","OK",leadList);
      return ResponseEntity.ok().body(responseDto);
     }

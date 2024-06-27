@@ -1,4 +1,4 @@
-package com.desertgm.app.Repositories;
+package com.desertgm.app.Repositories.prod;
 
 import com.desertgm.app.Models.Email.Email;
 import org.springframework.data.mongodb.repository.MongoRepository;

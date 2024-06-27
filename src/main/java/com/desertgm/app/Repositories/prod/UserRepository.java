@@ -1,4 +1,4 @@
-package com.desertgm.app.Repositories;
+package com.desertgm.app.Repositories.prod;
 import com.desertgm.app.Models.User.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -14,6 +14,5 @@ public interface UserRepository extends MongoRepository<User,String> {
     List<User> findBySupervisorId(String supervisorId );
 
     List<User> findByRole(int role);
-
 
 }

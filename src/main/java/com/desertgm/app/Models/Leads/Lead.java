@@ -17,7 +17,7 @@ public class Lead {
     @Id
     private String id;
 
-    private String Porte;
+    private Long Porte;
     private Long identificadorMatrizFilial;
     @Indexed
     private Long CNPJ;
@@ -33,7 +33,7 @@ public class Lead {
     @Indexed
     private Long CNAE;
 
-    private String activity;
+
 
     /*PENDING,CONFIRMED,SUSPENDED,REFUSED */
     private int status;
@@ -49,7 +49,7 @@ public class Lead {
         this.userId = "";
     }
 
-    public Lead(Long identificadorMatrizFilial, Long CNPJ, String razaoSocial, String clientName, String email, String phone1, String phone2, Long CNAE, String activity, int status, Date dateForCall, String comments, String userId) {
+    public Lead(Long identificadorMatrizFilial, Long CNPJ, String razaoSocial, String clientName, String email, String phone1, String phone2, Long CNAE, int status, Date dateForCall, String comments, String userId) {
         this.identificadorMatrizFilial = identificadorMatrizFilial;
         this.CNPJ = CNPJ;
         this.razaoSocial = razaoSocial;
@@ -58,11 +58,14 @@ public class Lead {
         Phone1 = phone1;
         Phone2 = phone2;
         this.CNAE = CNAE;
-        this.activity = activity;
+
         this.status = status;
         this.dateForCall = dateForCall;
         this.comments = comments;
         this.userId = "";
 
     }
+
+
+
 }

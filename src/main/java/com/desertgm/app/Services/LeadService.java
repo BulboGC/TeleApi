@@ -7,12 +7,10 @@ import com.desertgm.app.Models.ImportModels.Estabelecimento;
 import com.desertgm.app.Models.Leads.Lead;
 import com.desertgm.app.Models.User.User;
 import com.desertgm.app.Repositories.Imports.EstabelecimentoRepository;
-import com.desertgm.app.Repositories.LeadRepository;
-import com.desertgm.app.Repositories.UserRepository;
-import com.desertgm.app.Services.Imports.EstabelecimentoService;
+import com.desertgm.app.Repositories.prod.LeadRepository;
+import com.desertgm.app.Repositories.prod.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -70,7 +68,7 @@ public class LeadService {
         leadRepository.saveAll(list);
     }
 
-    public Lead DtoToLead(LeadDto leadDto,String userId){
+    /*public Lead DtoToLead(LeadDto leadDto,String userId){
 
          Lead lead = new Lead(
                 leadDto.identificadorMatrizFilial(),
@@ -89,7 +87,7 @@ public class LeadService {
         );
          return lead;
 
-    }
+    }*/
 
     public List<Lead> getLeadsPerCnae(Long cnae){
        var users = leadRepository.findByCNAEAndUserId(cnae,"");
@@ -143,8 +141,8 @@ public class LeadService {
         return leadRepository.save(lead);
     }
 
-    public List<Lead> EstabelecimentoToLeadByCnae(Long cnae){
-       List<Estabelecimento> list = estabelecimentoRepository.findByCnaeFiscalPrincipalId(cnae);
+    public List<Lead> EstabelecimentoToLeadByCnae(List<Estabelecimento> list){
+
        List<Lead> leads = new ArrayList<>();
        list.forEach((estabelecimento)->{
 

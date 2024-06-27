@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class CompanyController {
     @Autowired
     FileService fileService;
-    @Autowired
+    /*@Autowired
     GenericService<Company> companyGenericService;
 
     private AtomicLong taskIdGenerator = new AtomicLong();
@@ -33,5 +33,5 @@ public class CompanyController {
 
         }
         return ResponseEntity.ok().body("aguarde o processamento");
-    }
+    }*/
 }

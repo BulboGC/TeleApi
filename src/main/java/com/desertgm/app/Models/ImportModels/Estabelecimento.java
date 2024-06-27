@@ -14,7 +14,7 @@ public class Estabelecimento {
     //https://dadosabertos.rfb.gov.br/CNPJ/Estabelecimentos0.zip
     @Indexed
     private Long cnpjFull;
-    private Long cnpjBaseId;
+    private String cnpjBaseId;
 
     private String cnpjOrdem;
     private String cnpjDV;

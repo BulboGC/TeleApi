@@ -1,7 +1,7 @@
 package com.desertgm.app.Infra.Security;
 
 import com.desertgm.app.Models.User.User;
-import com.desertgm.app.Repositories.UserRepository;
+import com.desertgm.app.Repositories.prod.UserRepository;
 import com.desertgm.app.Services.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

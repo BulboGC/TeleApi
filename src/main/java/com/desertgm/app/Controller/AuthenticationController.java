@@ -10,7 +10,6 @@ import com.desertgm.app.DTO.User.UpdatePasswordDto;
 import com.desertgm.app.DTO.User.UserDto;
 import com.desertgm.app.Models.Email.Email;
 import com.desertgm.app.Models.User.User;
-import com.desertgm.app.Repositories.UserRepository;
 import com.desertgm.app.Services.EmailService;
 import com.desertgm.app.Services.TokenService;
 import com.desertgm.app.Services.User.RecoveryTokenService;
@@ -21,8 +20,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
 
 @RestController
 @RequestMapping("auth")

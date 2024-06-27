@@ -1,19 +1,14 @@
 package com.desertgm.app.Controller;
 
 import com.desertgm.app.DTO.NewResponseDto;
-import com.desertgm.app.Enums.UserRole;
 import com.desertgm.app.Models.User.User;
-import com.desertgm.app.Repositories.UserRepository;
+import com.desertgm.app.Repositories.prod.UserRepository;
 import com.desertgm.app.Services.User.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")

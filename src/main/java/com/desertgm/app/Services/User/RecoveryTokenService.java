@@ -2,9 +2,8 @@ package com.desertgm.app.Services.User;
 
 import com.desertgm.app.Models.User.RecoveryToken;
 import com.desertgm.app.Models.User.User;
-import com.desertgm.app.Repositories.RecoveryTokenRepository;
+import com.desertgm.app.Repositories.prod.RecoveryTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

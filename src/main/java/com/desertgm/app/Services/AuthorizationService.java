@@ -1,6 +1,6 @@
 package com.desertgm.app.Services;
 
-import com.desertgm.app.Repositories.UserRepository;
+import com.desertgm.app.Repositories.prod.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,6 +1,8 @@
 package com.desertgm.app.Models.ImportModels;
 
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 @Data
@@ -8,9 +10,10 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 public class Company {
     //https://dadosabertos.rfb.gov.br/CNPJ/Empresas0.zip
 
-    private Long cnpjBaseInt;
-
-    private String cnpjBaseStr;
+    @Id
+    private String id;
+    @Indexed
+    private String cnpjBase;
 
     private String razaoSocial;
 
@@ -18,7 +21,7 @@ public class Company {
 
     private Long qualificacaoResponsavelModel;
 
-    private double capitalSocial;
+    private String capitalSocial;
 
     private Long porteEmpresa;
 

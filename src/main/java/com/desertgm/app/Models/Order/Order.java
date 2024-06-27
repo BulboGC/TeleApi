@@ -7,7 +7,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 @Data
 @Document("Order")
@@ -20,6 +22,10 @@ public class Order {
     private ObjectId userId;
     @Indexed
     private OrderStatus status;
+    @Indexed
+    private LocalDateTime orderCreatedAt;
+    @Indexed
+    private LocalDateTime orderClosedAt;
 
     private Item orderItem;
 
@@ -28,6 +34,7 @@ public class Order {
         this.userId = userId;
         this.status = status;
         this.orderItem = orderItem;
+        this.orderCreatedAt = LocalDateTime.now();
     }
 
 
