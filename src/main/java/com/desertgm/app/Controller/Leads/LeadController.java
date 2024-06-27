@@ -68,6 +68,17 @@ public class LeadController {
         return ResponseEntity.ok().build();
     }*/
 
+    @GetMapping("/status/test/")
+    public ResponseEntity testePagination(@RequestParam int page,@RequestParam int size){
+        var obj = leadService.testPagination(page,size);
+        NewResponseDto responseDto = new NewResponseDto("transação realizada","OK",obj);
+        return ResponseEntity.ok().body(responseDto);
+
+                //rota de teste fazer paginação em leads e orders
+    }
+
+
+
     @PutMapping("/{id}")
     public ResponseEntity putLead(@RequestBody LeadDto leadDto,@RequestAttribute("userId") String userId,@PathVariable("id") String id){
         leadService.editLead(id,leadDto);

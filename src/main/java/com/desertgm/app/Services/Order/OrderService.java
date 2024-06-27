@@ -33,6 +33,7 @@ public class OrderService {
         Lead newlead = lead.get();
         /* Aterar o Status do Lead*/
         newlead.setStatus(LeadStatus.CONFIRMED.getLeadStatus());
+        order.setOrderCreatedAt(LocalDateTime.now());
         leadRepository.save(newlead);
         /* Salvar no banco*/
         orderRepository.save(order);

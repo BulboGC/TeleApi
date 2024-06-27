@@ -77,7 +77,7 @@ public class OrderController {
         }
 
     @PostMapping("/{leadId}")
-    public ResponseEntity<String> addOrder(
+    public ResponseEntity<NewResponseDto> addOrder(
             @Valid
             @RequestBody ItemDto item,
             @RequestAttribute("userId") String userId,
@@ -89,15 +89,17 @@ public class OrderController {
         var objectId = new ObjectId(userId);
         Order order = new Order(objectId,OrderStatus.PENDING, item1,leadId);
         orderService.addOrder(order,leadId);
-        return ResponseEntity.ok().body("Pedido Salvo com sucesso");
+        NewResponseDto responseDto = new NewResponseDto("Pedido Salvo com sucesso","OK",order);
+        return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Order>> getOrderList(@RequestAttribute("userId") String userId){
+    public ResponseEntity<NewResponseDto> getOrderList(@RequestAttribute("userId") String userId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         var user = userService.getUserById(userId);
         var orders = orderService.getListOrder(userId, UserRole.fromValue(user.getRole()));
-        return ResponseEntity.ok().body(orders);
+        NewResponseDto responseDto = new NewResponseDto("","OK",orders);
+        return ResponseEntity.ok().body(responseDto);
     }
 
     @DeleteMapping("/{id}")
