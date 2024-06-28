@@ -11,6 +11,7 @@ import com.desertgm.app.Repositories.prod.LeadRepository;
 import com.desertgm.app.Services.LeadService;
 import com.desertgm.app.Services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -101,7 +102,7 @@ public class LeadController {
             @RequestParam int size
     ){
        User user =  userService.getUserById(userId);
-       List<Lead> list =  leadService.getLeadsPerRole(user.getId(), user.getRole() ,page,size);
+       Page<Lead> list =  leadService.getLeadsPerRole(user.getId(), user.getRole() ,page,size);
        NewResponseDto responseDto = new NewResponseDto("transação realizada com sucesso","OK",list);
        return ResponseEntity.ok().body(responseDto);
     }

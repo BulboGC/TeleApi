@@ -20,10 +20,13 @@ import java.util.Optional;
 
 @Service
 public class OrderService {
+
     @Autowired
     OrderRepository orderRepository;
+
     @Autowired
     UserRepository userRepository;
+
     @Autowired
     LeadRepository leadRepository;
 
@@ -83,7 +86,7 @@ public class OrderService {
        return orderRepository.findAll();
     }
 
-    public Order updateStatus(OrderStatus status,String orderId){
+    public Order updateStatus(OrderStatus status, String orderId){
 
        Optional<Order> OpOrder =  orderRepository.findById(orderId);
        var order = OpOrder.get();
