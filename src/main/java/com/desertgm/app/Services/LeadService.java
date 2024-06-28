@@ -32,16 +32,16 @@ public class LeadService {
        Optional<Lead> optionalLead =  leadRepository.findById(leadId);
        return optionalLead.get();
     }
-    public List<Lead> getLeadsPerRole(String id, int role){
+    public Page<Lead> getLeadsPerRole(String id, int role,int page, int size){
 
-
+        Pageable pageable = PageRequest.of(page, size);
         var roleStr =  UserRole.fromValue(role);
         switch (roleStr){
             case USER:
-                return leadRepository.findByUserId(id);
+                return leadRepository.findByUserId(id,pageable);
 
             case ADMIN:
-                return leadRepository.findAll();
+                return leadRepository.findAll(pageable);
 
 
             case SUPERVISOR:
@@ -50,10 +50,10 @@ public class LeadService {
                         .map(User::getId) // Certifique-se de que o método getId retorna o ID do usuário como String
                         .collect(Collectors.toList());
 
-                return leadRepository.findByUserIdIn(ids);
+                return leadRepository.findByUserIdIn(ids,pageable);
 
             case SELLER:
-                leadRepository.findByStatus(LeadStatus.CONFIRMED.getLeadStatus());
+                leadRepository.findByStatus(LeadStatus.CONFIRMED.getLeadStatus(),pageable);
 
         }
 

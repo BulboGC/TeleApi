@@ -22,7 +22,7 @@ public class SociosController {
    @Autowired
     GenericService<Socios> socioService;
     private AtomicLong taskIdGenerator = new AtomicLong();
-
+    //teste
     @PostMapping("/socios")
     public ResponseEntity<?> addEstabelecimento() {
         String path = "D:\\JavaProjects\\ReceitaAPI\\arquivos\\Socios\\";

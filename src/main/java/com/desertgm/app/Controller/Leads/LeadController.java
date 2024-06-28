@@ -95,9 +95,13 @@ public class LeadController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<NewResponseDto> getLeads(@RequestAttribute("userId") String userId){
+    public ResponseEntity<NewResponseDto> getLeads(
+            @RequestAttribute("userId") String userId,
+            @RequestParam int page,
+            @RequestParam int size
+    ){
        User user =  userService.getUserById(userId);
-       List<Lead> list =  leadService.getLeadsPerRole(user.getId(), user.getRole() );
+       List<Lead> list =  leadService.getLeadsPerRole(user.getId(), user.getRole() ,page,size);
        NewResponseDto responseDto = new NewResponseDto("transação realizada com sucesso","OK",list);
        return ResponseEntity.ok().body(responseDto);
     }
