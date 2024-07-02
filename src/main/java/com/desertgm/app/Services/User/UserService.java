@@ -27,6 +27,7 @@ public class UserService {
         return userRepository.findByEmail(email.toLowerCase());
     }
 
+
     public User getUserById(String id){
       Optional<User> user0 =  userRepository.findById(id);
 
@@ -36,16 +37,20 @@ public class UserService {
       return user0.get();
 
     }
+
+
     public boolean userExist(String email){
         User user0 = userRepository.findByEmail(email);
         return user0 != null;
     }
+
 
     public List<User> findAllSupervisors(){
 
         return userRepository.findByRole(UserRole.SUPERVISOR.getRoleValue());
 
     }
+
 
     public List<User> getUserbyRoleint(int role){
       return userRepository.findByRole(role);
@@ -80,8 +85,13 @@ public class UserService {
             user.setLastname(userDto.lastname());
             user.setPassword(encryptedPassword);
             user.setEmail(userDto.email().toLowerCase());
+
+            if(userDto.role() != UserRole.ADMIN.getRoleValue()){
+                user.setRole(userDto.role());
+            }
+            
             user.setUsername(userDto.username());
-            user.setRole(userDto.role());
+        
             user.setSupervisorId(userDto.supervisorId());
             this.addUserorUpdate(user);
             return  user;

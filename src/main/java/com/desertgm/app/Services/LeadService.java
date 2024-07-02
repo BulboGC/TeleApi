@@ -3,10 +3,10 @@ package com.desertgm.app.Services;
 import com.desertgm.app.DTO.Lead.LeadDto;
 import com.desertgm.app.Enums.Lead.LeadStatus;
 import com.desertgm.app.Enums.UserRole;
-import com.desertgm.app.Models.ImportModels.Estabelecimento;
+import com.desertgm.app.Models.ImportModels.Estabelecimento.Estabelecimento;
 import com.desertgm.app.Models.Leads.Lead;
 import com.desertgm.app.Models.User.User;
-import com.desertgm.app.Repositories.Imports.EstabelecimentoRepository;
+import com.desertgm.app.Repositories.Imports.Estabelecimento.EstabelecimentoRepository;
 import com.desertgm.app.Repositories.prod.LeadRepository;
 import com.desertgm.app.Repositories.prod.UserRepository;
 import org.springframework.beans.BeanUtils;
@@ -150,11 +150,11 @@ public class LeadService {
        list.forEach((estabelecimento)->{
 
            Lead lead =new Lead();
-           lead.setCNPJ(Long.parseLong(estabelecimento.getCnpjBaseId() + estabelecimento.getCnpjOrdem()+ estabelecimento.getCnpjDV()));
+           lead.setCNPJ(Long.parseLong(estabelecimento.getCnpjBase() + estabelecimento.getCnpjOrdem()+ estabelecimento.getCnpjDV()));
            lead.setEmail(estabelecimento.getEmail());
            lead.setStatus(LeadStatus.PENDING.getLeadStatus());
-           lead.setCNAE(estabelecimento.getCnaeFiscalPrincipalId());
-           lead.setIdentificadorMatrizFilial(estabelecimento.getIdentificadorMatrizFilialId());
+           lead.setCNAE(estabelecimento.getCnae());
+           lead.setIdentificadorMatrizFilial(estabelecimento.getMatrizFilial());
 
            if(estabelecimento.getDdd1() != null &&  estabelecimento.getTelefone1() != null){
                lead.setPhone1(estabelecimento.getDdd1() + estabelecimento.getTelefone1());
@@ -164,8 +164,6 @@ public class LeadService {
                lead.setPhone2(estabelecimento.getDdd2()+ estabelecimento.getTelefone2());
            }
 
-
-           //lead.setRazaoSocial();
             leads.add(lead);
        });
 

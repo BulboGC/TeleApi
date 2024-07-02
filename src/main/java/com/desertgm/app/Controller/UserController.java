@@ -1,8 +1,6 @@
 package com.desertgm.app.Controller;
-
 import com.desertgm.app.DTO.NewResponseDto;
 import com.desertgm.app.Models.User.User;
-import com.desertgm.app.Repositories.prod.UserRepository;
 import com.desertgm.app.Services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +14,7 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
-    @Autowired
-    private UserRepository userRepository;
+
 
     @GetMapping("/ByRole")
     public ResponseEntity<NewResponseDto> getUserProfile(@RequestAttribute String userId) {
@@ -37,8 +34,9 @@ public class UserController {
 
     @GetMapping("/Supervisors")
     public ResponseEntity<NewResponseDto> getAllSupervisors(){
+
        List<User> userList =  userService.findAllSupervisors();
-        NewResponseDto responseDto = new NewResponseDto("transação efeituada com sucesso","OK",userList);
+        NewResponseDto responseDto = new NewResponseDto("transação efeituada com sucesso","OK", userList);
        return  ResponseEntity.ok().body(responseDto);
     }
 

@@ -1,22 +1,22 @@
 package com.desertgm.app.Services.FileService;
 
 import com.desertgm.app.Services.GenericService;
-import com.opencsv.CSVParserBuilder;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.exceptions.CsvValidationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -35,30 +35,29 @@ public class FileService {
     private static final Logger logger = LoggerFactory.getLogger(FileService.class);
 
     @Async
-    public <T> void readCsvFile(String csvFile, Long taskId, GenericService<T> service, Class<T> clazz) {
+    public <T> void readTxtFile(String txtFile, Long taskId, GenericService<T> service, Class<T> clazz) {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         int batchSize = 10000;
         int linecount = 0;
         List<T> batchList = new ArrayList<>(batchSize);
 
-        logger.info("Iniciando leitura do arquivo CSV: {}", csvFile);
+        logger.info("Iniciando leitura do arquivo TXT: {}", txtFile);
 
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            CSVReader reader = new CSVReaderBuilder(br)
-                    .withCSVParser(new CSVParserBuilder().withSeparator(';').build())
-                    .build();
+        try (BufferedReader br = new BufferedReader(new FileReader(txtFile))) {
             taskStatusMap.put(taskId, "Processando");
 
-            String[] nextLine;
-            while ((nextLine = reader.readNext()) != null) {
+            String line;
+            while ((line = br.readLine()) != null) {
                 linecount++;
 
-                if (nextLine.length == 0) {
-                    logger.warn("Linha inválida na contagem {}: {}", linecount, Arrays.toString(nextLine));
+                String[] data = line.split(";");
+
+                if (data.length == 0) {
+                    logger.warn("Linha inválida na contagem {}: {}", linecount, line);
                     continue; // Pula linhas inválidas
                 }
 
-                T model = service.parseLine(nextLine, format);
+                T model = service.parseLine(data, format);
 
                 if (model != null) {
                     batchList.add(model);
@@ -66,7 +65,7 @@ public class FileService {
 
                 if (batchList.size() >= batchSize) {
                     service.saveAll(batchList);
-                    logger.info("Linhas processadas: {} - Memória utilizada: {} bytes", linecount, Runtime.getRuntime().totalMemory());
+                    logMemoryUsage(linecount);
                     batchList.clear();
                     System.gc();
                 }
@@ -74,14 +73,22 @@ public class FileService {
 
             if (!batchList.isEmpty()) {
                 service.saveAll(batchList);
-                logger.info("Linhas processadas (restante): {} - Memória utilizada: {} bytes", linecount, Runtime.getRuntime().totalMemory());
+                logMemoryUsage(linecount);
             }
             taskStatusMap.put(taskId, "Concluído");
-        } catch (CsvValidationException e) {
-            logger.warn("Erro na linha {}: {}", linecount, e.getMessage());
-        } catch (Exception e) {
-            logger.warn("Erro ao processar linha {}", linecount, e);
+        } catch (IOException e) {
+            logger.error("Erro ao ler o arquivo TXT: {}", txtFile, e);
         }
+    }
+
+    private void logMemoryUsage(int linecount) {
+        MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
+        MemoryUsage heapMemoryUsage = memoryBean.getHeapMemoryUsage();
+
+        long maxMemory = heapMemoryUsage.getMax();
+        long usedMemory = heapMemoryUsage.getUsed();
+
+        logger.info("Linhas processadas: {} - Uso de memória: {} / {}", linecount, usedMemory, maxMemory);
     }
 
 

@@ -11,24 +11,23 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
-public class CompanyService /*implements GenericService<Company>*/ {
+public class CompanyService implements GenericService<Company> {
     @Autowired
     UtillsService utillsService;
     @Autowired
     CompanyRepository companyRepository;
 
-
+    @Override
     public void saveAll(List<Company> companyList){
         companyRepository.saveAll(companyList);
     }
-    /*@Override
+    @Override
     public Company parseLine(String[] data, SimpleDateFormat simpleDateFormat) {
         Company company = new Company();
 
         // Verificar se data contém ao menos um elemento e se é válido
         if (data.length > 0 && utillsService.isValidLong(data[0])) {
-            company.setCnpjBaseInt(Long.parseLong(utillsService.cleanString(data[0])));
-            company.setCnpjBaseStr(utillsService.truncate(utillsService.cleanString(data[0]), 255));
+            company.setCnpjBase(utillsService.truncate(utillsService.cleanString(data[0]), 255));
         }
 
         // Verificar se data contém ao menos dois elementos
@@ -49,7 +48,7 @@ public class CompanyService /*implements GenericService<Company>*/ {
         // Verificar se data contém ao menos cinco elementos
         if (data.length > 4) {
             try {
-                company.setCapitalSocial(Double.parseDouble(utillsService.cleanString(data[4])));
+                company.setCapitalSocial(utillsService.cleanString(data[4]));
             } catch (Exception e) {
                 // Log error or handle exception if needed
             }
@@ -66,7 +65,7 @@ public class CompanyService /*implements GenericService<Company>*/ {
         }
 
         return company;
-    }*/
+    }
 
     public Company findByCnpj(String cnpj){
        return companyRepository.findByCnpjBase(cnpj);

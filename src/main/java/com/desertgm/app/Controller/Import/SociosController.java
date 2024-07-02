@@ -1,12 +1,8 @@
 package com.desertgm.app.Controller.Import;
 
-import com.desertgm.app.Models.ImportModels.Estabelecimento;
 import com.desertgm.app.Models.ImportModels.Socios;
-import com.desertgm.app.Models.Leads.Lead;
-import com.desertgm.app.Models.Leads.Socio;
 import com.desertgm.app.Services.FileService.FileService;
 import com.desertgm.app.Services.GenericService;
-import com.desertgm.app.Services.Imports.SociosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,7 +28,7 @@ public class SociosController {
         for (String str : directories) {
 
 
-            fileService.readCsvFile(str, taskId,socioService, Socios.class);
+            fileService.readTxtFile(str, taskId,socioService, Socios.class);
 
         }
 

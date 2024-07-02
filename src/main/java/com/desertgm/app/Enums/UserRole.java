@@ -10,6 +10,7 @@ public enum UserRole {
     SELLER(4);
 
     private int roleValue;
+
     UserRole(int roleValue){
         this.roleValue = roleValue;
     }

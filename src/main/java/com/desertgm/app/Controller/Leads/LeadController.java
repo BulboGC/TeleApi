@@ -4,7 +4,7 @@ import com.desertgm.app.DTO.Lead.LeadDto;
 import com.desertgm.app.DTO.Lead.LeadStatusDto;
 import com.desertgm.app.DTO.NewResponseDto;
 import com.desertgm.app.Enums.Lead.LeadStatus;
-import com.desertgm.app.Models.ImportModels.Estabelecimento;
+import com.desertgm.app.Models.ImportModels.Estabelecimento.Estabelecimento;
 import com.desertgm.app.Models.Leads.Lead;
 import com.desertgm.app.Models.User.User;
 import com.desertgm.app.Repositories.prod.LeadRepository;

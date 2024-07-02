@@ -2,7 +2,7 @@ package com.desertgm.app.Controller;
 
 import com.desertgm.app.DTO.NewResponseDto;
 import com.desertgm.app.DTO.Order.ItemDto;
-import com.desertgm.app.DTO.Order.OrderDto;
+
 import com.desertgm.app.DTO.Order.OrderstatusDto;
 import com.desertgm.app.Enums.Order.OrderStatus;
 import com.desertgm.app.Enums.UserRole;
@@ -18,8 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/order")
@@ -53,18 +51,17 @@ public class OrderController {
             @RequestBody Item item,
             @RequestAttribute("userId") String userId,
             @PathVariable String orderId)
-        {
+    {
 
-            Order order =  orderService.getOrder(orderId);
-            if(order.getStatus() == OrderStatus.PAID){
-                throw new RuntimeException("Não é possivel alterar status de um pedido ja finalizado");
-            }
-            order.setOrderItem(item);
-            Order editOrder =  orderService.editOrder(order,item);
-
-            NewResponseDto responseDto = new NewResponseDto("Pedido encontrado","OK",editOrder);
-            return ResponseEntity.ok().body(responseDto);
+        Order order =  orderService.getOrder(orderId);
+        if(order.getStatus() == OrderStatus.PAID){
+            throw new RuntimeException("Não é possivel alterar status de um pedido ja finalizado");
         }
+        order.setOrderItem(item);
+        Order editOrder =  orderService.editOrder(order,item);
+        NewResponseDto responseDto = new NewResponseDto("Pedido encontrado","OK",editOrder);
+        return ResponseEntity.ok().body(responseDto);
+    }
 
 
         @PutMapping("/status/{orderId}")
@@ -75,6 +72,8 @@ public class OrderController {
            NewResponseDto responseDto = new NewResponseDto("status alterado com sucesso","OK",order);
            return ResponseEntity.ok().body(responseDto);
         }
+
+
 
     @PostMapping("/{leadId}")
     public ResponseEntity<NewResponseDto> addOrder(
@@ -95,7 +94,6 @@ public class OrderController {
 
     @GetMapping("/")
     public ResponseEntity<NewResponseDto> getOrderList(@RequestAttribute("userId") String userId){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         var user = userService.getUserById(userId);
         var orders = orderService.getListOrder(userId, UserRole.fromValue(user.getRole()));
         NewResponseDto responseDto = new NewResponseDto("","OK",orders);

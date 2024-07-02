@@ -38,11 +38,11 @@ public class AuthenticationController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<LoginAuthenticationResponseDto> login(@RequestBody AuthenticationDto data){
+    public ResponseEntity<NewResponseDto> login(@RequestBody AuthenticationDto data){
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(),data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
         String token = tokenService.generateToken((User) auth.getPrincipal());
-        LoginAuthenticationResponseDto responseDto = new LoginAuthenticationResponseDto(
+        NewResponseDto responseDto = new NewResponseDto(
                 "Login Realizado com sucesso",
                 "OK",
                 token
@@ -51,10 +51,12 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(responseDto);
     }
 
+    
     @PostMapping("/register")//usuario comum 1 ADM 2 Supervisor 3
     public ResponseEntity<NewResponseDto> register(@RequestBody UserDto userDto){
             var user = userService.ParseDtoToUser(userDto);
             NewResponseDto responseDto = new NewResponseDto(
+                    
                     "Usuario salvo com sucesso",
                     "OK",user
             );
@@ -65,7 +67,6 @@ public class AuthenticationController {
     @GetMapping("/token/{token}")
     public ResponseEntity<NewResponseDto> verifyToken(@PathVariable String token){
         var validatetoken = tokenService.validateToken(token);
-        ResponseDto responseDto = new ResponseDto();
         if(validatetoken == ""){
             throw new RuntimeException("TokenExpirado");
         }

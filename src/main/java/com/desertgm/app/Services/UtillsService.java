@@ -14,13 +14,16 @@ public class UtillsService {
         if (value == null) {
             return null;
         }
-        return value.length() > maxLength ? value.substring(0, maxLength) : value;
+        return cleanString(value).length() > maxLength ? cleanString(value).substring(0, maxLength) : cleanString(value);
     }
 
     public Date parseDate(String dateString, SimpleDateFormat format) {
-        if (dateString == null || dateString.trim().isEmpty()) {
+        dateString = cleanString(dateString); // Limpa a string antes de usar
+
+        if (dateString == null || dateString.isEmpty()) {
             return null;
         }
+
         try {
             return format.parse(dateString);
         } catch (ParseException e) {
@@ -32,12 +35,7 @@ public class UtillsService {
         if (str == null || str.trim().isEmpty()) {
             return false;
         }
-        try {
-            Long.parseLong(str);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
+        return parseLong(str) != null;
     }
 
     public boolean isDateValid(Date date) {
@@ -56,27 +54,33 @@ public class UtillsService {
 
     public Long parseLong(String value) {
         try {
-            return value != null && !value.isEmpty() ? Long.parseLong(value) : null;
+            return value != null && !value.isEmpty() ? Long.parseLong(cleanString(value)) : null;
         } catch (NumberFormatException e) {
             return null;
         }
     }
 
+
+
+
     public int parseInt(String value) {
         try {
-            return value != null && !value.isEmpty() ? Integer.parseInt(value) : 0;
+            return value != null && !value.isEmpty() ? Integer.parseInt(cleanString(value)) : 0;
         } catch (NumberFormatException e) {
             return 0;
         }
     }
+
     public String cleanString(String input) {
-        if (input == null) {
+        if (input == null || input.isEmpty()) {
+            return "";
+        }
+        String cleanedData = input.replaceAll("[^a-zA-Z0-9,\\s\"]", "").replaceAll("^\"|\"$", "");
+        // Trata caso específico de campo vazio
+        if (cleanedData.isEmpty()) {
             return "";
         }
         // Remove caracteres especiais e espaços
-        return input.replaceAll("[^a-zA-Z0-9]", "");
+        return cleanedData;
     }
-
-
-
 }
