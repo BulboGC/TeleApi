@@ -32,9 +32,11 @@ public class UtillsService {
     }
 
     public boolean isValidLong(String str) {
+
         if (str == null || str.trim().isEmpty()) {
             return false;
         }
+
         return parseLong(str) != null;
     }
 

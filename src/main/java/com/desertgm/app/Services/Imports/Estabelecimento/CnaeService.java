@@ -34,4 +34,7 @@ public class CnaeService implements GenericService<Cnae> {
     public void saveAll(List<Cnae> entities) {
         cnaeRepository.saveAll(entities);
     }
+    public Cnae findByCode(int code){
+        return cnaeRepository.findByCode(code);
+    }
 }

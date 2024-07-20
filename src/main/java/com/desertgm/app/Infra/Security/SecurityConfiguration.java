@@ -33,6 +33,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST,"/auth/forgot-password").permitAll()
                         .requestMatchers(HttpMethod.POST,"/auth/reset-password").permitAll()
                         .requestMatchers(HttpMethod.GET,"/estabelecimento").permitAll()
+                        .requestMatchers(HttpMethod.GET ,"/estabelecimento/filter/").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/estabelecimento/{cnae}").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

@@ -1,6 +1,8 @@
 package com.desertgm.app.Controller.Import;
 
+import com.desertgm.app.DTO.Imports.ResponseEstabelecimentoDto;
 import com.desertgm.app.DTO.NewResponseDto;
+import com.desertgm.app.DTO.ResponsePageble;
 import com.desertgm.app.Models.ImportModels.Estabelecimento.*;
 import com.desertgm.app.Models.Leads.Lead;
 
@@ -9,11 +11,15 @@ import com.desertgm.app.Services.Imports.Estabelecimento.*;
 import com.desertgm.app.Services.LeadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicLong;
 
 
@@ -40,6 +46,7 @@ public class EstabelecimentoController {
     private PaisService paisService;
     @Autowired
     private MunicipioService municipioService;
+
 
 
     private AtomicLong taskIdGenerator = new AtomicLong();
@@ -96,7 +103,7 @@ public class EstabelecimentoController {
 
 
     @PostMapping("/estabelecimento/{cnae}")
-    public ResponseEntity<NewResponseDto> getLeadsByCnae(@PathVariable Long cnae){
+    public ResponseEntity<NewResponseDto> getLeadsByCnae(@PathVariable int cnae){
 
        List<Estabelecimento> list =  estabelecimentoService.findByCnae(cnae);
        List<Lead> leadList  = estabelecimentoService.trasformInLead(list);
@@ -107,16 +114,47 @@ public class EstabelecimentoController {
 
 
     @GetMapping("/estabelecimento/{cnae}")
-    public ResponseEntity<NewResponseDto> getMethodName(
-        @PathVariable Long cnae,
+    public ResponseEntity<?> getMethodName(
+        @PathVariable int cnae,
         @RequestParam int page) {
 
-       Page<Estabelecimento> ePage = estabelecimentoService.findByCnaePageble(cnae, page);
-       NewResponseDto responseDto = new NewResponseDto("Leads encontrados", "OK", ePage);
-       return ResponseEntity.ok().body(responseDto);
-    
+        Page<Estabelecimento> ePage = estabelecimentoService.findByCnaePageble(cnae, page);
+        CompletableFuture<List<ResponseEstabelecimentoDto>> futureDtoList = estabelecimentoService.transformEstabelecimentoToResponseDto(ePage.getContent());
+        try{
+            List<ResponseEstabelecimentoDto> responseEstabelecimentoDtos = futureDtoList.get();
+            ResponsePageble responseDto = new ResponsePageble(
+                    "transação realizada.",
+                    "OK",
+                    ePage.getNumber(),
+                    ePage.getNumberOfElements(),
+                    ePage.getTotalPages(),
+                    responseEstabelecimentoDtos
+            );
+            return ResponseEntity.ok().body(responseDto);
+
+        }catch (Exception e){
+            NewResponseDto responseDto = new NewResponseDto("erro interno","BADREQUEST",e);
+           return ResponseEntity.badRequest().body(responseDto);
+        }
+
     }
-    
+
+    @GetMapping("estabelecimento/filter/")
+    public ResponseEntity<?> getFilteredEstabelecimento(
+            @RequestParam(required = false) String cnpjBase,
+            @RequestParam(required = false) Integer cnae,
+            @RequestParam(required = false) String nomeFantasia,
+            @RequestParam(required = false) Integer municipio,
+            @RequestParam(required = false) Integer situacaoCadastral,
+            @RequestParam(required = true) Integer page,
+            @RequestParam(required = true) Integer size
+            ){
+
+        var response =  estabelecimentoService.filterEstabelecimento(cnpjBase,cnae,nomeFantasia,municipio,situacaoCadastral,page,size);
+
+        return ResponseEntity.ok().body(response);
+    }
+
 
 }
 

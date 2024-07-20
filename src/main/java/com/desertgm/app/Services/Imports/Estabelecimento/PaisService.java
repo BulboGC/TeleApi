@@ -37,4 +37,8 @@ public class PaisService implements GenericService<Pais> {
     public void saveAll(List<Pais> entities) {
         paisRepository.saveAll(entities);
     }
+
+    public Pais findbyCode(int code){
+       return paisRepository.findByCode(code);
+    }
 }

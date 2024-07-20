@@ -18,7 +18,7 @@ public class Lead {
     private String id;
 
     private Long Porte;
-    private Long identificadorMatrizFilial;
+    private int identificadorMatrizFilial;
     @Indexed
     private Long CNPJ;
     private String razaoSocial;
@@ -31,7 +31,7 @@ public class Lead {
     private String Phone2;
 
     @Indexed
-    private Long CNAE;
+    private int CNAE;
 
 
 
@@ -49,7 +49,7 @@ public class Lead {
         this.userId = "";
     }
 
-    public Lead(Long identificadorMatrizFilial, Long CNPJ, String razaoSocial, String clientName, String email, String phone1, String phone2, Long CNAE, int status, Date dateForCall, String comments, String userId) {
+    public Lead(int identificadorMatrizFilial, Long CNPJ, String razaoSocial, String clientName, String email, String phone1, String phone2, int CNAE, int status, Date dateForCall, String comments, String userId) {
         this.identificadorMatrizFilial = identificadorMatrizFilial;
         this.CNPJ = CNPJ;
         this.razaoSocial = razaoSocial;

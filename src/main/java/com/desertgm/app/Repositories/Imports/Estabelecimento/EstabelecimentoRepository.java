@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public interface EstabelecimentoRepository extends MongoRepository<Estabelecimento,String> {
-    List<Estabelecimento> findByCnae(Long cnae);
-    Page<Estabelecimento> findByCnae(Long cnae,Pageable pageable);
+    List<Estabelecimento> findByCnae(int cnae);
+    Page<Estabelecimento> findByCnae(int cnae,Pageable pageable);
 }

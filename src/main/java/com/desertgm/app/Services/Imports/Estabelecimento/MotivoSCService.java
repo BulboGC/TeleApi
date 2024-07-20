@@ -36,4 +36,8 @@ public class MotivoSCService implements GenericService<MotivoSC> {
     public void saveAll(List<MotivoSC> entities) {
         motivoSCRepository.saveAll(entities);
     }
+
+    public MotivoSC findByCode(int code){
+       return motivoSCRepository.findByCode(code);
+    }
 }

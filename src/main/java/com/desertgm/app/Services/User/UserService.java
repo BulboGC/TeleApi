@@ -6,6 +6,7 @@ import com.desertgm.app.Models.User.User;
 import com.desertgm.app.Repositories.prod.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class UserService {
 
         userRepository.save(user);
     }
+
     public User getUserByEmail(String email){
         return userRepository.findByEmail(email.toLowerCase());
     }
@@ -44,11 +46,9 @@ public class UserService {
         return user0 != null;
     }
 
-
+    @Cacheable("Supervisors")
     public List<User> findAllSupervisors(){
-
         return userRepository.findByRole(UserRole.SUPERVISOR.getRoleValue());
-
     }
 
 

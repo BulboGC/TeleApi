@@ -2,11 +2,13 @@ package com.desertgm.app.DTO.Imports;
 
 import com.desertgm.app.Enums.imports.estabelecimento.MatrizFilialEnum;
 import com.desertgm.app.Enums.imports.estabelecimento.SituacaoCadastralEnum;
+import lombok.Data;
 
 import java.util.Date;
-
+@Data
 public class ResponseEstabelecimentoDto {
-    private String cnpj;
+
+    private Long cnpj;
     private MatrizFilialEnum matrizFilial;
 
     private String nome_fantasia;
@@ -46,16 +48,20 @@ public class ResponseEstabelecimentoDto {
     private String telefone1;
     private String ddd2;
     private String telefone2;
+
+
     private String ddd_fax;
     private String fax;
+
     private String email;
     private String situacao_especial;
     //fazer mascara de Date
     private String dt_situacao_especial;
 
 
-    ResponseEstabelecimentoDto(){
+    public  ResponseEstabelecimentoDto(){
 
     }
+
 
 }

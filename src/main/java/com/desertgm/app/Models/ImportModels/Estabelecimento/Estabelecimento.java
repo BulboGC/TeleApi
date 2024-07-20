@@ -11,35 +11,34 @@ public class Estabelecimento {
 
 
     @Indexed
-    private Long cnpjFull;
-    @Indexed
     private String cnpjBase;
+    @Indexed
 
     private String cnpjOrdem;
     private String cnpjDV;
 
 
-    private Long MatrizFilial; // Alterado para Long
+    private int MatrizFilial; // Alterado para Long
 
     private String nomeFantasia;
 
 
-    private Long situtacaoCadastral; // Alterado para Long
+    private int situtacaoCadastral; // Alterado para Long
 
     private Date dt_SituacaoCadastral;
 
 
-    private Long motivoSituacaoCadastral; // Alterado para Long
+    private int motivoSituacaoCadastral; // Alterado para Long
 
     private String nomeCidadeExterior;
 
 
-    private Long pais; // Alterado para Long
+    private int pais; // Alterado para Long
 
     private Date dt_inicioAtividade;
 
     @Indexed
-    private Long cnae;
+    private int cnae;
 
 
     private String cnae_secundaria;
@@ -58,7 +57,7 @@ public class Estabelecimento {
     private String uf;
 
 
-    private Long municipio; // Alterado para Long
+    private int municipio; // Alterado para Long
 
 
     private String ddd1;

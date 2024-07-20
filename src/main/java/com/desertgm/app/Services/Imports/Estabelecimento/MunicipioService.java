@@ -34,4 +34,7 @@ public class MunicipioService implements GenericService<Municipio> {
     public void saveAll(List<Municipio> entities) {
         municipioRepository.saveAll(entities);
     }
+    public Municipio findByCode(int code){
+       return municipioRepository.findByCode(code);
+    }
 }
